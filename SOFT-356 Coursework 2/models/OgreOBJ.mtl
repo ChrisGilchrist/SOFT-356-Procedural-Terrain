@@ -1,0 +1,10 @@
+newmtl blinn1SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd textures\SkinColorMostro_COLOR.png
+bump textures\SkinColorMostro_NRM.png -bm 0.2
+Ni 1.00
+Ks 0.00 0.00 0.00
+map_Ks textures\SkinColorMostro_SPEC.png
