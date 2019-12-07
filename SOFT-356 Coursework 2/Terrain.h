@@ -19,10 +19,10 @@ private:
 
 	static const int count = VERTEX_COUNT * VERTEX_COUNT;
 
-	vector<vec3> vertices = vector<vec3>(count);
-	vector<vec3> normals =vector<vec3>(count);
-	vector<vec2> textureCoords = vector<vec2>(count);
-	vector<int> indices = vector<int>(6 * (VERTEX_COUNT - 1) * VERTEX_COUNT);
+	vector<float> vertices = vector<GLfloat>(count * 3);
+	vector<float> normals =vector<GLfloat>(count * 3);
+	vector<float> textureCoords = vector<GLfloat>(count * 2);
+	vector<int> indices = vector<int>(6 * (VERTEX_COUNT - 1) * (VERTEX_COUNT - 1));
 
 	//int nrOfVertices;
 	unsigned int nrOfIndices;
@@ -68,27 +68,9 @@ public:
 		//Texture texture
 	);
 
-	/*
-	Terrain(
-		Vertex* vertexArray,
-		const unsigned& nrOfVertices,
-		GLuint* indexArray,
-		const unsigned& nrOfIndices,
-		MaterialGroup* materialGroups,
-		const unsigned& nrOfMatGroups,
-		vec3 position,
-		vec3 origin,
-		vec3 rotation,
-		vec3 scale
-	);
-
-	Terrain(const Terrain& obj);
-
-	*/
-
 	~Terrain();
 
-	void generateTerrain(std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, vector<glm::vec2>& textureCoords, vector<int>& indices);
+	void generateTerrain(std::vector<GLfloat>& vertices, std::vector<GLfloat>& normals, vector<GLfloat>& textureCoords, vector<int>& indices);
 
 	// Setters
 	void setPosition(const vec3 position);

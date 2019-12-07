@@ -313,7 +313,7 @@ ModelLoader::ModelLoader(
 
 	this->initTerrain();
 
-	fileLoaded = this->initModel("creeper2.obj");
+	fileLoaded = this->initModel("creeper.dae");
 
 	// If it is not true then we ask for them to choose another file
 	if (!fileLoaded)
@@ -500,6 +500,8 @@ void ModelLoader::clearModelInfo()
 	textures.clear();
 	materials.clear();
 	models.clear();
+
+	delete terrain;
 
 	// Reset texture count to -1
 	textureCount = -1;
