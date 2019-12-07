@@ -17,7 +17,7 @@ void Terrain::initVAO()
 	//GEN VBO AND BIND AND SEND DATA
 	glGenBuffers(1, &this->vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, this->vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(GLfloat), &vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(float), &vertices, GL_STATIC_DRAW);
 
 	/* Texture
 	glGenBuffers(1, &this->textureBuffer);
@@ -110,19 +110,19 @@ Terrain::~Terrain()
 }
 
 
-void Terrain::generateTerrain(std::vector<GLfloat> &vertices, std::vector<GLfloat> &normals, vector<GLfloat> &textureCoords, vector<int> &indices) {
+void Terrain::generateTerrain(std::vector<float> &vertices, std::vector<float> &normals, vector<float> &textureCoords, vector<int> &indices) {
 
 	int vertexPointer = 0;
 	for (int i = 0; i < VERTEX_COUNT; i++) {
 		for (int j = 0; j < VERTEX_COUNT; j++) {
-			vertices[vertexPointer * 3] = (GLfloat)j / ((GLfloat)VERTEX_COUNT - 1) * SIZE;
+			vertices[vertexPointer * 3] = (float)j / ((float)VERTEX_COUNT - 1) * SIZE;
 			vertices[vertexPointer * 3 + 1] = 0;
-			vertices[vertexPointer * 3 + 2] = (GLfloat)i / ((GLfloat)VERTEX_COUNT - 1) * SIZE;
+			vertices[vertexPointer * 3 + 2] = (float)i / ((float)VERTEX_COUNT - 1) * SIZE;
 			normals[vertexPointer * 3] = 0;
 			normals[vertexPointer * 3 + 1] = 1;
 			normals[vertexPointer * 3 + 2] = 0;
-			textureCoords[vertexPointer * 2] = (GLfloat)j / ((GLfloat)VERTEX_COUNT - 1);
-			textureCoords[vertexPointer * 2 + 1] = (GLfloat)i / ((GLfloat)VERTEX_COUNT - 1);
+			textureCoords[vertexPointer * 2] = (float)j / ((float)VERTEX_COUNT - 1);
+			textureCoords[vertexPointer * 2 + 1] = (float)i / ((float)VERTEX_COUNT - 1);
 			vertexPointer++;
 		}
 	}

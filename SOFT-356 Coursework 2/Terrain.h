@@ -19,9 +19,9 @@ private:
 
 	static const int count = VERTEX_COUNT * VERTEX_COUNT;
 
-	vector<float> vertices = vector<GLfloat>(count * 3);
-	vector<float> normals =vector<GLfloat>(count * 3);
-	vector<float> textureCoords = vector<GLfloat>(count * 2);
+	vector<float> vertices = vector<float>(count * 3);
+	vector<float> normals =vector<float>(count * 3);
+	vector<float> textureCoords = vector<float>(count * 2);
 	vector<int> indices = vector<int>(6 * (VERTEX_COUNT - 1) * (VERTEX_COUNT - 1));
 
 	//int nrOfVertices;
@@ -70,7 +70,7 @@ public:
 
 	~Terrain();
 
-	void generateTerrain(std::vector<GLfloat>& vertices, std::vector<GLfloat>& normals, vector<GLfloat>& textureCoords, vector<int>& indices);
+	void generateTerrain(std::vector<float>& vertices, std::vector<float>& normals, vector<float>& textureCoords, vector<int>& indices);
 
 	// Setters
 	void setPosition(const vec3 position);
