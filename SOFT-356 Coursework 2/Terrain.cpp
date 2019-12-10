@@ -17,7 +17,7 @@ void Terrain::initVAO()
 	//GEN VBO AND BIND AND SEND DATA
 	glGenBuffers(1, &this->vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, this->vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(float), &vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
 	/* Texture
 	glGenBuffers(1, &this->textureBuffer);
@@ -100,8 +100,8 @@ Terrain::~Terrain()
 	glDeleteBuffers(1, &this->EBO);
 
 	// clear the arrays of information
-	delete[] this->vertexArray;
-	delete[] this->indexArray;
+	//delete[] this->vertexArray;
+	//delete[] this->indexArray;
 
 	vertices.clear();
 	//normals.clear();

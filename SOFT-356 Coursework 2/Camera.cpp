@@ -19,7 +19,7 @@ Camera::Camera(vec3 position, vec3 direction, vec3 worldUp)
 	this->ViewMatrix = mat4(1.f);
 
 	// this->movementSpeed = 3.f;
-	this->movementSpeed = 20.f;
+	this->movementSpeed = 60.f;
 	this->sensitivity = 5.f;
 
 	this->worldUp = worldUp;
