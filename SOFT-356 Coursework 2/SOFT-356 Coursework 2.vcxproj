@@ -133,6 +133,7 @@
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="stb_image.hpp" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="utils.h" />

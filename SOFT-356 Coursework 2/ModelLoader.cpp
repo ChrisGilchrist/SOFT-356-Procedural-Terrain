@@ -107,7 +107,6 @@ void ModelLoader::initShaders()
 void ModelLoader::initTerrain()
 {
 	// Create new terrain
-	//Texture texture = Texture("textures/10021_Giraffe_v05.jpg" , GL_TEXTURE_2D);
 	terrain = new Terrain(
 		0,
 		0,
@@ -313,8 +312,10 @@ ModelLoader::ModelLoader(
 
 	this->initTerrain();
 
+	/*
 	fileLoaded = this->initModel("creeper.dae");
-
+	*/
+	fileLoaded = true;
 	// If it is not true then we ask for them to choose another file
 	if (!fileLoaded)
 	{

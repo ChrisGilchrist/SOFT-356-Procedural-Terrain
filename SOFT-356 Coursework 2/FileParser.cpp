@@ -991,7 +991,6 @@ bool FileParser::processColladaFile(string filePath, Mesh*& mesh, vector < Textu
 
 }
 
-
 void FileParser::createObject(Mesh*& mesh, vector < Texture* >& textures, vector < Material* >& materials, vector < Model* >& models)
 {
 	// If there is more than one model then space them out along x axis

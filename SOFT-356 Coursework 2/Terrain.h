@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Mesh.h"
-#pragma once
 
 #include "utils.h"
 
@@ -10,19 +9,25 @@
 #include "Texture.h"
 #include "Vertex.h"
 #include "MaterialGroup.h"
+#include "stb_image.hpp"
 
 class Terrain
 {
 private:
+
 	float SIZE = 800;
-	static const int VERTEX_COUNT = 128;
+	int VERTEX_COUNT = 128;
+	const float MAX_HEIGHT = 40;
+	const float MAX_PIXEL_COLOUR = 256 * 256 * 256;
 
-	static const int count = VERTEX_COUNT * VERTEX_COUNT;
+	int count = 0;
+	//static const int count = VERTEX_COUNT * VERTEX_COUNT;
+	vector<float> vertices = vector<float>(0);
+	vector<float> normals =vector<float>(0);
+	vector<float> textureCoords = vector<float>(0);
+	vector<int> indices = vector<int>(0);
 
-	vector<float> vertices = vector<float>(count * 3);
-	vector<float> normals =vector<float>(count * 3);
-	vector<float> textureCoords = vector<float>(count * 2);
-	vector<int> indices = vector<int>(6 * (VERTEX_COUNT - 1) * (VERTEX_COUNT - 1));
+	std::vector<std::vector<float>> heights;
 
 	//int nrOfVertices;
 	unsigned int nrOfIndices;
@@ -51,6 +56,8 @@ private:
 	std::vector<GLuint> m_vaos;
 	std::vector<GLuint> m_vbos;
 
+	Texture* texture;
+
 	void initVAO();
 
 	void updateUniforms(Shader* shader);
@@ -71,6 +78,10 @@ public:
 	~Terrain();
 
 	void generateTerrain(std::vector<float>& vertices, std::vector<float>& normals, vector<float>& textureCoords, vector<int>& indices);
+
+	float getHeight(int x, int z, const stb::image& image);
+
+	vec3 calculateNormal(int x, int z, const stb::image& image);
 
 	// Setters
 	void setPosition(const vec3 position);

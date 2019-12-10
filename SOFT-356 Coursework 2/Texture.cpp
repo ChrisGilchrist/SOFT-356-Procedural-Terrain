@@ -20,7 +20,7 @@ Texture::Texture(const char* fileName, GLenum type)
 
 	if (image)
 	{
-		//cout << "SUCCESS::TEXTURE::TEXTURE_LOADING_WORKED: " << fileName << "\n";
+		cout << "SUCCESS::TEXTURE::TEXTURE_LOADING_WORKED: " << fileName << "\n";
 		glTexImage2D(type, 0, GL_RGBA, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 		glGenerateMipmap(type);
 	}
@@ -47,7 +47,7 @@ inline GLuint Texture::getID()
 
 void Texture::bind(const GLint texture_unit)
 {
-	//cout << "SUCCESS::TEXTURE::TEXTURE_HAS_BEEN_BINDED: " << texture_unit << "\n";
+	cout << "SUCCESS::TEXTURE::TEXTURE_HAS_BEEN_BINDED: " << texture_unit << "\n";
 	glActiveTexture(GL_TEXTURE0 + texture_unit);
 	glBindTexture(this->type, this->id);
 }
