@@ -258,13 +258,6 @@ float Terrain::getY() {
 
 void Terrain::render(Shader* shader)
 {
-	// Create texture for terrain
-	Texture grassTex = Texture("terrain/grass.png", GL_TEXTURE_2D);
-	Texture dirtTex = Texture("terrain/mud.png", GL_TEXTURE_2D);
-	Texture grassFlowerTex = Texture("terrain/grassFlowers.png", GL_TEXTURE_2D);
-	Texture pathTex = Texture("terrain/path.png", GL_TEXTURE_2D);
-	Texture blendMapTex = Texture("terrain/blendMap.png", GL_TEXTURE_2D);
-
 	//Update uniforms
 	this->updateModelMatrix();
 	this->updateUniforms(shader);

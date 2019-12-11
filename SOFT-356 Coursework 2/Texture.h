@@ -11,7 +11,7 @@ private:
 	unsigned int type;
 
 public:
-	Texture();
+	//Texture();
 
 	Texture(const char* fileName, GLenum type);
 
