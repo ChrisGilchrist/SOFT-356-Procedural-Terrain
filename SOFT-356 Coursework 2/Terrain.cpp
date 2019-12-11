@@ -259,14 +259,22 @@ float Terrain::getY() {
 void Terrain::render(Shader* shader)
 {
 	// Create texture for terrain
-	Texture texture = Texture("textures/grass.png", GL_TEXTURE_2D);
+	Texture grassTex = Texture("terrain/grass.png", GL_TEXTURE_2D);
+	Texture dirtTex = Texture("terrain/mud.png", GL_TEXTURE_2D);
+	Texture grassFlowerTex = Texture("terrain/grassFlowers.png", GL_TEXTURE_2D);
+	Texture pathTex = Texture("terrain/path.png", GL_TEXTURE_2D);
+	Texture blendMapTex = Texture("terrain/blendMap.png", GL_TEXTURE_2D);
 
 	//Update uniforms
 	this->updateModelMatrix();
 	this->updateUniforms(shader);
 
 	// Send texture to the shader
-	shader->set1i(0, "terrainTexture");
+	shader->set1i(0, "backgroundTexture");
+	shader->set1i(1, "rTexture");
+	shader->set1i(2, "gTexture");
+	shader->set1i(3, "bTexture");
+	shader->set1i(4, "blendMap");
 
 	//Bind VAO
 	glBindVertexArray(this->VAO);
@@ -274,7 +282,11 @@ void Terrain::render(Shader* shader)
 	shader->use();
 
 	// Bind terrain and draw
-	texture.bind(0);
+	grassTex.bind(0);
+	dirtTex.bind(1);
+	grassFlowerTex.bind(2);
+	pathTex.bind(3);
+	blendMapTex.bind(4);
 
 	// Draw the terrain
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
