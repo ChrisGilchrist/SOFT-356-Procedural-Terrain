@@ -10,6 +10,7 @@
 #include "Vertex.h"
 #include "MaterialGroup.h"
 #include "stb_image.hpp"
+#include "HeightsGenerator.h"
 
 class Terrain
 {
@@ -17,7 +18,7 @@ private:
 
 	float SIZE = 800;
 	int VERTEX_COUNT = 128;
-	const float MAX_HEIGHT = 40;
+	//const float MAX_HEIGHT = 40;
 	const float MAX_PIXEL_COLOUR = 256 * 256 * 256;
 
 	int count = 0;
@@ -83,9 +84,9 @@ public:
 
 	void generateTerrain(std::vector<float>& vertices, std::vector<float>& normals, vector<float>& textureCoords, vector<int>& indices);
 
-	float getHeight(int x, int z, const stb::image& image);
+	float getHeight(int x, int z, HeightsGenerator heightsGenerator);
 
-	vec3 calculateNormal(int x, int z, const stb::image& image);
+	vec3 calculateNormal(int x, int z, HeightsGenerator heightsGenerator);
 
 	// Setters
 	void setPosition(const vec3 position);
