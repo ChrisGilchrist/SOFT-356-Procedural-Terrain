@@ -67,8 +67,8 @@ void ModelLoader::initOpenGLOptions()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // <!--- This shows the model in a wireframe view
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // <!--- This shows the model in a wireframe view
 
 	//Input
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

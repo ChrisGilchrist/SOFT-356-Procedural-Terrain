@@ -34,7 +34,7 @@ void Terrain::initVAO()
 	/* Texture*/
 	glGenBuffers(1, &this->textureBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, this->textureBuffer);
-	glBufferData(GL_ARRAY_BUFFER, textureCoords.size() * sizeof(float), textureCoords.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, this->textureCoords.size() * sizeof(float), textureCoords.data(), GL_STATIC_DRAW);
 	
 	//Texcoords	
 	glVertexAttribPointer(
@@ -50,7 +50,7 @@ void Terrain::initVAO()
 	/* Normals*/
 	glGenBuffers(1, &this->normalBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, this->normalBuffer);
-	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(float), normals.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, this->normals.size() * sizeof(float), normals.data(), GL_STATIC_DRAW);
 	
 	//Normals	
 	glVertexAttribPointer(
@@ -103,7 +103,7 @@ Terrain::Terrain(
 	this->y = gridY * SIZE;
 
 	// This method needs to create the array of Vertex's
-	this->generateTerrain(vertices, normals, textureCoords, this->indices);
+	this->generateTerrain(vertices, normals, textureCoords, indices);
 	this->initVAO();
 	this->updateModelMatrix();
 }
@@ -112,9 +112,8 @@ Terrain::~Terrain()
 {
 	glDeleteVertexArrays(1, &this->VAO);
 	glDeleteBuffers(1, &this->vertexBuffer);
-	//glDeleteBuffers(1, &this->normalBuffer);
-	//glDeleteBuffers(1, &this->textureBuffer);
-
+	glDeleteBuffers(1, &this->normalBuffer);
+	glDeleteBuffers(1, &this->textureBuffer);
 	glDeleteBuffers(1, &this->EBO);
 
 	// clear the arrays of information
@@ -129,11 +128,6 @@ Terrain::~Terrain()
 
 
 void Terrain::generateTerrain(std::vector<float> &vertices, std::vector<float> &normals, vector<float> &textureCoords, vector<int> &indices) {
-
-	// Create texture for terrain
-	texture = &Texture("grass.png", GL_TEXTURE_2D);
-
-	int h, w;
 
 	// Load in the height map
 	stb::image image{ "heightMap/heightmap.png", 4 };
@@ -260,8 +254,13 @@ float Terrain::getY() {
 	return this->y;
 }
 
+
+
 void Terrain::render(Shader* shader)
 {
+	// Create texture for terrain
+	Texture texture = Texture("textures/grass.png", GL_TEXTURE_2D);
+
 	//Update uniforms
 	this->updateModelMatrix();
 	this->updateUniforms(shader);
@@ -269,13 +268,13 @@ void Terrain::render(Shader* shader)
 	// Send texture to the shader
 	shader->set1i(0, "terrainTexture");
 
-	shader->use();
-
 	//Bind VAO
 	glBindVertexArray(this->VAO);
 
+	shader->use();
+
 	// Bind terrain and draw
-	texture->bind(0);
+	texture.bind(0);
 
 	// Draw the terrain
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);

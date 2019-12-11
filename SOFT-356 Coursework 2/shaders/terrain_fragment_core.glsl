@@ -4,10 +4,10 @@ in vec3 vs_position;
 in vec2 vs_texcoord;
 in vec3 vs_normal;
 
-out vec4 FragColor;
-
 // Terrain texture
 uniform sampler2D terrainTexture;
+
+out vec4 FragColor;
 
 void main()
 {
