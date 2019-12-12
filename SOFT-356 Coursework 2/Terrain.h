@@ -32,7 +32,7 @@ private:
 	unsigned int nrOfIndices;
 
 	float x;
-	float y;
+	float z;
 
 	Vertex* vertexArray;
 	unsigned int nrOfVertices;
@@ -84,34 +84,24 @@ public:
 
 	float getHeight(int x, int z, HeightsGenerator heightsGenerator);
 
+	float getHeightOfTerrain(float worldX, float worldY);
+
 	vec3 calculateNormal(int x, int z, HeightsGenerator heightsGenerator);
-
-	// Setters
-	void setPosition(const vec3 position);
-
-	void setOrigin(const vec3 origin);
-
-	void setRotation(const vec3 rotation);
-
-	void setScale(const vec3 setScale);
-
-
-	// Control the mesh
-	void move(const vec3 position);
-
-	void rotate(const vec3 rotation);
-
-	void scaleUp(const vec3 scale);
 
 	// Getters
 	float getX();
 
-	float getY();
+	float getZ();
 
 	//Texture getTexture();
 
 
 	// Render the mesh to the scene
 	void render(Shader* shader);
+
+
+	// Math functions
+	float barrycentric(const glm::vec3& p1, const glm::vec3& p2,
+		const glm::vec3& p3, const glm::vec2& pos);
 
 };

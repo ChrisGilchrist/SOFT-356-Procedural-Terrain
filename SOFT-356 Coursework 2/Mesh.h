@@ -75,6 +75,19 @@ public:
 	void scaleUp(const vec3 scale);
 
 
+	float getPositionX();
+
+	float getPositionY();
+
+	float getPositionZ();
+
+	void setPositionX(float postionX);
+
+	void setPositionY(float postionY);
+
+	void setPositionZ(float postionZ);
+
+
 	// Render the mesh to the scene
 	void render(Shader* shader, vector<Material*> materials, vector<Texture*> textures);
 

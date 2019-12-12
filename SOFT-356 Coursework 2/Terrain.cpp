@@ -88,7 +88,7 @@ void Terrain::updateModelMatrix()
 // Public 
 Terrain::Terrain(
 	int gridX,
-	int gridY,
+	int gridZ,
 	vec3 position = vec3(0.f),
 	vec3 origin = vec3(0.f),
 	vec3 rotation = vec3(0.f),
@@ -100,7 +100,7 @@ Terrain::Terrain(
 	this->rotation = rotation;
 	this->scale = scale;
 	this->x = gridX * SIZE;
-	this->y = gridY * SIZE;
+	this->z = gridZ * SIZE;
 
 	// This method needs to create the array of Vertex's
 	this->generateTerrain(vertices, normals, textureCoords, indices);
@@ -196,50 +196,48 @@ vec3 Terrain::calculateNormal(int x, int z, HeightsGenerator generator) {
 	return normal;
 }
 
-void Terrain::setPosition(const vec3 position)
-{
-	this->position = position;
+float Terrain::getHeightOfTerrain(float worldX, float worldZ) {
+	float terrainX = worldX - x;
+	float terrainZ = worldZ - z;
+
+	float gridSquareSize = SIZE / ((float)heights.size() / 1);
+
+	int gridX = (int)floor(terrainX / gridSquareSize);
+	int gridZ = (int)floor(terrainZ / gridSquareSize);
+	if (gridX >= heights.size() - 1 || gridZ > heights.size() - 1 ||
+		gridX < 0 || gridZ < 0) {
+		return 0;
+	}
+
+	float xCoord = fmod(terrainX, gridSquareSize) / gridSquareSize;
+	float zCoord = fmod(terrainZ, gridSquareSize) / gridSquareSize;
+	float answer = 0.0f;
+
+	if (xCoord <= (1 - zCoord)) {
+		answer = barrycentric(
+			glm::vec3{ 0, heights[gridX][gridZ], 0 },
+			glm::vec3{ 1, heights[gridX + 1][gridZ], 0 },
+			glm::vec3{ 0, heights[gridX][gridZ + 1], 1 },
+			glm::vec2{ xCoord, zCoord });
+	}
+	else {
+		answer = barrycentric(
+			glm::vec3{ 0, heights[gridX + 1][gridZ], 0 },
+			glm::vec3{ 1, heights[gridX + 1][gridZ + 1], 1 },
+			glm::vec3{ 0, heights[gridX][gridZ + 1], 1 },
+			glm::vec2{ xCoord, zCoord });
+	}
+
+	return answer;
 }
-
-void Terrain::setOrigin(const vec3 origin)
-{
-	this->origin = origin;
-}
-
-void Terrain::setRotation(const vec3 rotation)
-{
-	this->rotation = rotation;
-}
-
-void Terrain::setScale(const vec3 setScale)
-{
-	this->scale = scale;
-}
-
-
-void Terrain::move(const vec3 position)
-{
-	this->position += position;
-}
-
-void Terrain::rotate(const vec3 rotation)
-{
-	this->rotation += rotation;
-}
-
-void Terrain::scaleUp(const vec3 scale)
-{
-	this->scale += scale;
-}
-
 
 
 float Terrain::getX() {
 	return this->x;
 }
 
-float Terrain::getY() {
-	return this->y;
+float Terrain::getZ() {
+	return this->z;
 }
 
 
@@ -277,4 +275,16 @@ void Terrain::render(Shader* shader)
 	glUseProgram(0);
 	glActiveTexture(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+
+// Useful Math functions
+float Terrain::barrycentric(const glm::vec3& p1, const glm::vec3& p2,
+	const glm::vec3& p3, const glm::vec2& pos)
+{
+	float det = (p2.z - p3.z) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.z - p3.z);
+	float l1 = ((p2.z - p3.z) * (pos.x - p3.x) + (p3.x - p2.x) * (pos.y - p3.z)) / det;
+	float l2 = ((p3.z - p1.z) * (pos.x - p3.x) + (p1.x - p3.x) * (pos.y - p3.z)) / det;
+	float l3 = 1.0f - l1 - l2;
+	return l1 * p1.y + l2 * p2.y + l3 * p3.y;
 }

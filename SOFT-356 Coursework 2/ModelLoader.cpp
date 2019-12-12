@@ -123,74 +123,10 @@ bool ModelLoader::initModel(string choiceName)
 {
 	bool fileLoadedCorrectly = false;
 
-	// Initalise timer variables
-	auto start = chrono::high_resolution_clock::now();
-	auto finish = chrono::high_resolution_clock::now();
-	chrono::duration<double> elapsed = finish - start;
-
 	// Init array of meshes
 	Mesh* mesh;
 
-	// If it is an obj file then load the obj and mtl file for the object
-	if (choiceName.find(".obj") != string::npos) {
-
-		string materialFileName = "";
-
-		// Start timer
-		start = chrono::high_resolution_clock::now();
-
-		fileLoadedCorrectly = modelParser.processObjFile("models/" + choiceName, mesh, materialFileName);
-
-		if (!fileLoadedCorrectly)
-		{
-			cout << "Could not find specified obj (.obj) file!!! \n";
-			cout << "\n";
-			cout << "\n";
-			return false;
-		}
-
-		// End timer 
-		finish = chrono::high_resolution_clock::now();
-		elapsed = finish - start;
-		cout << "Loading model: " << fixed << setprecision(3) << elapsed.count() << "s" << endl;
-
-		start = chrono::high_resolution_clock::now();
-
-		fileLoadedCorrectly = modelParser.processMtlFile("models/" + materialFileName, this->textures, this->materials, textureCount);
-
-		if (!fileLoadedCorrectly)
-		{
-			cout << "Could not find specified material (.mtl) file!!! \n";
-			cout << "\n";
-			cout << "\n";
-			return false;
-		}
-
-		finish = chrono::high_resolution_clock::now();
-		elapsed = finish - start;
-		cout << "Loading textures: " << fixed << setprecision(3) << elapsed.count() << "s" << endl;
-	
-	}
-	// Else we assume it is a dae file (collada), meaning we can load it in one go
-	else
-	{
-		start = chrono::high_resolution_clock::now();
-
-		fileLoadedCorrectly = modelParser.processColladaFile("models/" + choiceName, mesh, textures, materials, textureCount);
-
-		if (!fileLoadedCorrectly)
-		{
-			cout << "Could not find specified collada (.dae) file!!! \n";
-			cout << "\n";
-			cout << "\n";
-			return false;
-		}
-
-		finish = chrono::high_resolution_clock::now();
-		elapsed = finish - start;
-		cout << "Loading model: " << fixed << setprecision(3) << elapsed.count() << "s" << endl;
-	
-	}
+	fileLoadedCorrectly = modelParser.processColladaFile("models/" + choiceName, mesh, textures, materials, textureCount);
 
 	// Now take all the materials and meshes to load in a object.
 	modelParser.createObject(mesh, textures, materials, models);
@@ -199,6 +135,8 @@ bool ModelLoader::initModel(string choiceName)
 
 	// Clear the mesh once done with it
 	delete mesh;
+
+	return fileLoadedCorrectly;
 }
 
 void ModelLoader::initLights()
@@ -274,6 +212,7 @@ ModelLoader::ModelLoader(
 	GL_VERSION_MAJOR(GL_VERSION_MAJOR),
 	GL_VERSION_MINOR(GL_VERSION_MINOR),
 	camera(glm::vec3(0.f, 0.f, 10.f), glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 1.f, 0.f))
+	//camera(glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 1.f, 0.f))
 {
 	bool fileLoaded = false;
 
@@ -283,8 +222,8 @@ ModelLoader::ModelLoader(
 	this->framebufferHeight = this->WINDOW_HEIGHT;
 
 	this->camPosition = glm::vec3(0.f, 0.f, 1.f);
-	this->camFront = glm::vec3(0.f, 0.f, -1.f);
 	this->worldUp = glm::vec3(0.f, 1.f, 0.f);
+	this->camFront = glm::vec3(0.f, 0.f, -1.f);
 
 	this->fov = 90.f;
 	this->nearPlane = 0.1f;
@@ -312,9 +251,7 @@ ModelLoader::ModelLoader(
 
 	this->initTerrain();
 
-	/*
 	fileLoaded = this->initModel("creeper.dae");
-	*/
 	fileLoaded = true;
 	// If it is not true then we ask for them to choose another file
 	if (!fileLoaded)
@@ -436,6 +373,62 @@ void ModelLoader::updateKeyboardInput()
 	}
 
 	//Model Interaction
+
+	// Move Player
+	if (glfwGetKey(this->window, GLFW_KEY_UP) == GLFW_PRESS)
+	{
+
+		float terrainHeight = terrain->getHeightOfTerrain(
+			models[selectedModel]->getPositionX(),
+			models[selectedModel]->getPositionZ());
+
+		Model* model = models[selectedModel];
+
+		model->setPositionY(terrainHeight);
+
+		models[selectedModel]->move(vec3(0, 0, 0.5f));
+	}
+
+	if (glfwGetKey(this->window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	{
+		float terrainHeight = terrain->getHeightOfTerrain(
+			models[selectedModel]->getPositionX(),
+			models[selectedModel]->getPositionZ());
+
+		Model* model = models[selectedModel];
+
+		model->setPositionY(terrainHeight);
+
+		models[selectedModel]->move(vec3(0, 0, -0.5f));
+	}
+
+	if (glfwGetKey(this->window, GLFW_KEY_LEFT) == GLFW_PRESS)
+	{
+		float terrainHeight = terrain->getHeightOfTerrain(
+			models[selectedModel]->getPositionX(),
+			models[selectedModel]->getPositionZ());
+
+		Model* model = models[selectedModel];
+
+		model->setPositionY(terrainHeight);
+
+		models[selectedModel]->move(vec3(0.5f, 0, 0));
+	}
+
+	if (glfwGetKey(this->window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+	{
+		float terrainHeight = terrain->getHeightOfTerrain(
+			models[selectedModel]->getPositionX(),
+			models[selectedModel]->getPositionZ());
+
+		Model* model = models[selectedModel];
+
+		model->setPositionY(terrainHeight);
+
+		models[selectedModel]->move(vec3(-0.5f, 0, 0));
+	}
+
+
 
 	// Scale up
 	if (glfwGetKey(this->window, GLFW_KEY_B) == GLFW_PRESS)

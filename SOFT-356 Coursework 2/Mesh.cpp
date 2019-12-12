@@ -46,11 +46,12 @@ void Mesh::updateUniforms(Shader* shader)
 void Mesh::updateModelMatrix()
 {
 	this->ModelMatrix = mat4(1.f);
-	this->ModelMatrix = glm::translate(this->ModelMatrix, this->origin);
+	this->ModelMatrix = glm::translate(this->ModelMatrix, this->position);
 	this->ModelMatrix = glm::rotate(this->ModelMatrix, radians(this->rotation.x), vec3(1.f, 0.f, 0.f));
 	this->ModelMatrix = glm::rotate(this->ModelMatrix, radians(this->rotation.y), vec3(0.f, 1.f, 0.f));
 	this->ModelMatrix = glm::rotate(this->ModelMatrix, radians(this->rotation.z), vec3(0.f, 0.f, 1.f));
-	this->ModelMatrix = glm::translate(this->ModelMatrix, this->position - this->origin);
+	// TODO - Dont think this is needed anymore?
+	//this->ModelMatrix = glm::translate(this->ModelMatrix, this->position - this->origin);
 	this->ModelMatrix = glm::scale(this->ModelMatrix, this->scale);
 }
 
@@ -183,6 +184,33 @@ void Mesh::scaleUp(const vec3 scale)
 {
 	this->scale += scale;
 }
+
+
+// Position coords setters / getters
+float Mesh::getPositionX() {
+	return this->position.x;
+}
+
+float Mesh::getPositionY() {
+	return this->position.y;
+}
+
+float Mesh::getPositionZ() {
+	return this->position.z;
+}
+
+void Mesh::setPositionX(float postionX) {
+	this->position.x = postionX;
+}
+
+void Mesh::setPositionY(float postionY) {
+	this->position.y = postionY;
+}
+
+void Mesh::setPositionZ(float postionZ) {
+	this->position.z = postionZ;
+}
+
 
 
 void Mesh::render(Shader* shader, vector<Material*> materials, vector<Texture*> textures)

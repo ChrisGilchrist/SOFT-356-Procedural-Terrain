@@ -1004,7 +1004,8 @@ void FileParser::createObject(Mesh*& mesh, vector < Texture* >& textures, vector
 	else
 	{
 		models.push_back(new Model(
-			vec3(0.f, 0.f, 2.f),
+			// Do this so it puts the model in the middle of the terrain to start off 
+			vec3(20.f, 0.f, 20.f),
 			materials,
 			mesh
 		));
