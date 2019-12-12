@@ -135,11 +135,9 @@ void Terrain::generateTerrain(std::vector<float> &vertices, std::vector<float> &
 	// Load in the height map
 	//stb::image image{ "heightMap/heightmap.png", 4 };
 	
-	int VERTEX_COUNT = 128;	
 	heights.resize(VERTEX_COUNT);
 	for (auto& h : heights) h.resize(VERTEX_COUNT);
 
-	count = VERTEX_COUNT * VERTEX_COUNT;
 	vertices.resize(count * 3);
 	normals.resize(count * 3);
 	textureCoords.resize(count * 2);
@@ -182,18 +180,18 @@ void Terrain::generateTerrain(std::vector<float> &vertices, std::vector<float> &
 	}
 }
 
-float Terrain::getHeight(int x, int z, HeightsGenerator heightsGenerator) {
-	return heightsGenerator.generateHeight(x, z);
+float Terrain::getHeight(int x, int z, HeightsGenerator generator) {
+	return generator.generateHeight(x, z);
 }
 
-vec3 Terrain::calculateNormal(int x, int z, HeightsGenerator heightsGenerator) {
-	float height_l = getHeight(x - 1, z, heightsGenerator);
-	float height_r = getHeight(x + 1, z, heightsGenerator);
-	float height_d = getHeight(x, z - 1, heightsGenerator);
-	float height_u = getHeight(x, z + 1, heightsGenerator);
+vec3 Terrain::calculateNormal(int x, int z, HeightsGenerator generator) {
+	float heightL = getHeight(x - 1, z, generator);
+	float heightR = getHeight(x + 1, z, generator);
+	float heightD = getHeight(x, z - 1, generator);
+	float heightU = getHeight(x, z + 1, generator);
 
-	glm::vec3 normal{ height_l - height_r, 2.0f, height_d - height_u };
-	normal = glm::normalize(normal);
+	vec3 normal{ heightL - heightR, 2.0f, heightD - heightU };
+	normal = normalize(normal);
 
 	return normal;
 }

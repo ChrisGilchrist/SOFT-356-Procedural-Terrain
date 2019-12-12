@@ -7,22 +7,24 @@ HeightsGenerator::HeightsGenerator()
 {
 
 	// Generate the seed number
-	//srand(time(NULL));
-	float randNum = genRandomNumber(MAX_VALUE);
+	srand(time(NULL));
+	float randNum = genRandomSeed(MAX_VALUE);
 	// Set the seed
 	this->seed = randNum;
 
-	cout << genRandomNumber(MAX_VALUE);
-	cout << genRandomNumber(MAX_VALUE);
-	cout << genRandomNumber(MAX_VALUE);
+	cout << genRandomNumber();
+	cout << genRandomNumber();
+	cout << genRandomNumber();
 
 }
 
 float HeightsGenerator::generateHeight(int x, int z) {
 
-	float total = getInterpolateNoise(x / 4, z / 4) * AMPLITUDE;
-	total += getInterpolateNoise(x / 2, z / 2) * AMPLITUDE / 3;
-	total += getInterpolateNoise(x, z) * AMPLITUDE / 9;
+	float total = getInterpolateNoise(x / 20.0f, z / 20.0f) * AMPLITUDE;
+
+	//float total = getInterpolateNoise(x / 4.0f, z / 4.0f) * AMPLITUDE;
+	//total += getInterpolateNoise(x / 2.0f, z / 2.0f) * AMPLITUDE / 3.0f;
+	//total += getInterpolateNoise(x, z) * AMPLITUDE / 9.0f;
 	return total;
 
 }
@@ -44,34 +46,44 @@ float HeightsGenerator::getInterpolateNoise(float x, float z) {
 
 float HeightsGenerator::interpolate(float a, float b, float blend) {
 	double theta = blend * M_PI;
-	float f = (1 - cos(theta)) * 0.5;
-	return a * (1 - f) + b * f;
+	float f = (float)(1.0f - cos(theta)) * 0.5f;
+	return a * (1.0f - f) + b * f;
 }
 
 float HeightsGenerator::getSmoothNoise(int x, int z) {
+
 	float corners = (getNoise(x - 1, z - 1) + getNoise(x + 1, z - 1) + getNoise(x - 1, z + 1)
-		+ getNoise(x + 1, z + 1)) / 16;
+		+ getNoise(x + 1, z + 1)) / 16.0f;
 
 	float sides = (getNoise(x - 1, z) + getNoise(x + 1, z) + getNoise(x, z - 1)
-		+ getNoise(x, z + 1)) / 8;
+		+ getNoise(x, z + 1)) / 8.0f;
 
-	float center = getNoise(x, z) / 4;
+	float center = getNoise(x, z) / 4.0f;
 
 	return corners + sides + center;
+
 
 }
 
 float HeightsGenerator::getNoise(int x, int z) {
 	srand(x * 49632 + z * 325176 + seed);
-	return (genRandomNumber(MAX_VALUE)) * 2 - 1;
+	float randNum = genRandomNumber();
+	return randNum * 2.0f - 1.0f;
 }
 
+// Generate seed between 0 and 100000000
+float HeightsGenerator::genRandomSeed(int max) {
+	int f = std::rand() % max + 1;
+	return f;
+}
 
-float HeightsGenerator::genRandomNumber(int max) {
+// Generate number between 0 and 1 for terrain height
+float HeightsGenerator::genRandomNumber() {
 	//srand(time(NULL));	
 	//float f = rand() % max;
 	
-	float x = rand();
-	float f = (float)x / max;
+	//float x = rand();
+	//float f = (float)x / 1;
+	float f = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 	return f;
 }

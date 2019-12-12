@@ -17,12 +17,10 @@ class Terrain
 private:
 
 	float SIZE = 800;
-	int VERTEX_COUNT = 128;
-	//const float MAX_HEIGHT = 40;
+	float VERTEX_COUNT = 512;
 	const float MAX_PIXEL_COLOUR = 256 * 256 * 256;
 
-	int count = 0;
-	//static const int count = VERTEX_COUNT * VERTEX_COUNT;
+	int count = VERTEX_COUNT * VERTEX_COUNT;
 	vector<float> vertices = vector<float>(0);
 	vector<float> normals =vector<float>(0);
 	vector<float> textureCoords = vector<float>(0);

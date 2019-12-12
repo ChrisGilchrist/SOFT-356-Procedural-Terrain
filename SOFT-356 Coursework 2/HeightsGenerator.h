@@ -11,8 +11,8 @@ class HeightsGenerator
 {
 private:
 
-	const int MAX_VALUE = 100000;
-	const float AMPLITUDE = 70;
+	const int MAX_VALUE = 10000;
+	const float AMPLITUDE = 70.0f;
 
 	unsigned int seed;
 
@@ -32,7 +32,10 @@ public:
 
 
 	// Util
-	float genRandomNumber(int max);
+	float genRandomSeed(int max);
+
+	float genRandomNumber();
+
 
 
 };
