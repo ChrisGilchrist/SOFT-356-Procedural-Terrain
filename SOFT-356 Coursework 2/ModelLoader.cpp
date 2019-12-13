@@ -196,10 +196,12 @@ void ModelLoader::initLights()
 	// Create light used to illuminate the object
 	light = new Light(
 		//vec3(10.f, 5.f, -1.f), // Closer to models
-		vec3(20.f, 10.f, -1.f),
+		//vec3(20.f, 10.f, -1.f),
+		vec3(200.f, 200.f, 300.f),
 		vec3(0.f),
 		vec3(0, 0, 0),
-		vec3(0.5f),
+		//vec3(0.5f),
+		vec3(20.f),
 		vec3(0.8f, 0.8f, 0.8f),
 		vec3(0.8f, 0.8f, 0.8f),
 		vec3(1.0f, 1.0f, 1.0f)
@@ -218,6 +220,7 @@ void ModelLoader::initUniforms()
 
 	this->shaders[SHADER_TERRAIN_PROGRAM]->setMat4fv(ViewMatrix, "ViewMatrix");
 	this->shaders[SHADER_TERRAIN_PROGRAM]->setMat4fv(ProjectionMatrix, "ProjectionMatrix");
+	this->shaders[SHADER_TERRAIN_PROGRAM]->setVec3f(this->light->getPosition(), "lightPos0");
 
 	this->shaders[SHADER_SKYBOX_PROGRAM]->setMat4fv(ViewMatrix, "ViewMatrix");
 	this->shaders[SHADER_SKYBOX_PROGRAM]->setMat4fv(ProjectionMatrix, "ProjectionMatrix");
@@ -225,6 +228,10 @@ void ModelLoader::initUniforms()
 	this->shaders[SHADER_CORE_PROGRAM]->setVec3f(this->light->getAmbient(), "lightAmbient");
 	this->shaders[SHADER_CORE_PROGRAM]->setVec3f(this->light->getDiffuse(), "lightDiffuse");
 	this->shaders[SHADER_CORE_PROGRAM]->setVec3f(this->light->getSpecular(), "lightSpecular");
+
+	this->shaders[SHADER_TERRAIN_PROGRAM]->setVec3f(this->light->getAmbient(), "lightAmbient");
+	this->shaders[SHADER_TERRAIN_PROGRAM]->setVec3f(this->light->getDiffuse(), "lightDiffuse");
+	this->shaders[SHADER_TERRAIN_PROGRAM]->setVec3f(this->light->getSpecular(), "lightSpecular");
 }
 
 void ModelLoader::updateUniforms()
@@ -238,6 +245,7 @@ void ModelLoader::updateUniforms()
 	this->shaders[SHADER_LIGHT_PROGRAM]->setMat4fv(this->ViewMatrix, "ViewMatrix");
 
 	this->shaders[SHADER_TERRAIN_PROGRAM]->setMat4fv(this->ViewMatrix, "ViewMatrix");
+	this->shaders[SHADER_TERRAIN_PROGRAM]->setVec3f(this->camera.getPosition(), "cameraPos");
 
 	this->shaders[SHADER_SKYBOX_PROGRAM]->setMat4fv(this->ViewMatrix, "ViewMatrix");
 
