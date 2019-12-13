@@ -34,9 +34,16 @@ void Model::scale(const vec3 scale)
 	this->mesh->scaleUp(scale);
 }
 
-void Model::move(string direction, float delta)
+void Model::move(string direction, float delta, Terrain* terrain)
 {
-	this->mesh->move(direction, delta);
+	// Work out the terrain height
+	float terrainHeight = terrain->getHeightOfTerrain(
+		mesh->getPosition().x,
+		mesh->getPosition().z
+	);
+
+	// Pass it to the mesh
+	this->mesh->move(direction, delta, terrainHeight);
 }
 
 

@@ -32,11 +32,12 @@ private:
 	float TURN_SPEED = 160;
 	float GRAVITY = -50;
 	float JUMP_POWER = 30;
-	float TERRAIN_HEIGHT = 0;
 
 	float currentSpeed = 0;
 	float currentTurnSpeed = 0;
 	float upwardsSpeed = 0;
+
+	bool isInAir = false;
 
 
 	mat4 ModelMatrix;
@@ -79,7 +80,7 @@ public:
 
 
 	// Control the mesh
-	void move(string direction, float delta);
+	void move(string direction, float delta, float terrainHeight);
 
 	void checkDirection(string direction);
 

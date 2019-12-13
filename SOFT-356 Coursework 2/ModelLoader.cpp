@@ -373,63 +373,27 @@ void ModelLoader::updateKeyboardInput(float delta)
 	// Move Player
 	if (glfwGetKey(this->window, GLFW_KEY_UP) == GLFW_PRESS)
 	{
-		float terrainHeight = terrain->getHeightOfTerrain(
-			models[selectedModel]->getPositionX(),
-			models[selectedModel]->getPositionZ());
-
-		Model* model = models[selectedModel];
-
-		model->setPositionY(terrainHeight);
-		
-
-		// Tell mesh we are going forwards
-		models[selectedModel]->move("FORWARD", dt);
-
+		models[selectedModel]->move("FORWARD", dt, terrain);
 	}
 
 	if (glfwGetKey(this->window, GLFW_KEY_DOWN) == GLFW_PRESS)
 	{
-		float terrainHeight = terrain->getHeightOfTerrain(
-			models[selectedModel]->getPositionX(),
-			models[selectedModel]->getPositionZ());
-
-		Model* model = models[selectedModel];
-
-		model->setPositionY(terrainHeight);
-
-		models[selectedModel]->move("BACKWARDS", dt);
+		models[selectedModel]->move("BACKWARDS", dt, terrain);
 	}
 
 	if (glfwGetKey(this->window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
-
-		//this->camera.move();
-
-		float terrainHeight = terrain->getHeightOfTerrain(
-			models[selectedModel]->getPositionX(),
-			models[selectedModel]->getPositionZ());
-
-		Model* model = models[selectedModel];
-
-		model->setPositionY(terrainHeight);
-		
-		models[selectedModel]->move("TURN_LEFT", dt);
+		models[selectedModel]->move("TURN_LEFT", dt, terrain);
 	}
 
 	if (glfwGetKey(this->window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
-	
-		//this->camera.move();
+		models[selectedModel]->move("TURN_RIGHT", dt, terrain);
+	}
 
-		float terrainHeight = terrain->getHeightOfTerrain(
-			models[selectedModel]->getPositionX(),
-			models[selectedModel]->getPositionZ());
-
-		Model* model = models[selectedModel];
-
-		model->setPositionY(terrainHeight);
-		
-		models[selectedModel]->move("TURN_RIGHT", dt);
+	if (glfwGetKey(this->window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	{
+		models[selectedModel]->move("JUMP", dt, terrain);
 	}
 
 	/* Scale up

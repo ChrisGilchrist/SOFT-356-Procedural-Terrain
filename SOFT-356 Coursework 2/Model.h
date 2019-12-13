@@ -6,6 +6,7 @@
 #include"Texture.h"
 #include"Shader.h"
 #include"Material.h"
+#include"Terrain.h"
 
 class Model
 {
@@ -29,7 +30,7 @@ public:
 
 	void scale(const vec3 scale);
 
-	void move(string direction, float delta);
+	void move(string direction, float delta, Terrain* terrain);
 
 
 	float getPositionX();

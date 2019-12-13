@@ -169,7 +169,7 @@ void Mesh::setScale(const vec3 setScale)
 	this->scale = scale;
 }
 
-void Mesh::move(string direction, float delta) {
+void Mesh::move(string direction, float delta, float terrainHeight) {
 	// Check the direction and change values accordingly
 	checkDirection(direction);
 
@@ -182,9 +182,10 @@ void Mesh::move(string direction, float delta) {
 	increasePosition(0, upwardsSpeed * delta, 0);
 
 	// Check if the Y position of the model is below the terrain height, if so set to 0
-	if (getPosition().y < TERRAIN_HEIGHT) {
+	if (getPosition().y < terrainHeight) {
 		upwardsSpeed = 0;
-		//setPosition().y = TERRAIN_HEIGHT;
+		isInAir = false;
+		position.y = terrainHeight;
 	}
 }
 
@@ -210,6 +211,14 @@ void Mesh::checkDirection(string direction)
 	}
 	else {
 		this->currentTurnSpeed = 0;
+	}
+
+
+	if (direction == "JUMP") {
+		if (!isInAir) {
+			this->upwardsSpeed = JUMP_POWER;
+			isInAir = true;
+		}	
 	}
 }
 
