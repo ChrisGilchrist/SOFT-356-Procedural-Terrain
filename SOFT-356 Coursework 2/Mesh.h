@@ -74,6 +74,7 @@ public:
 
 	void scaleUp(const vec3 scale);
 
+	vec3 getPosition();
 
 	float getPositionX();
 
@@ -86,6 +87,10 @@ public:
 	void setPositionY(float postionY);
 
 	void setPositionZ(float postionZ);
+
+
+
+	vec3 getRotation();
 
 
 	// Render the mesh to the scene

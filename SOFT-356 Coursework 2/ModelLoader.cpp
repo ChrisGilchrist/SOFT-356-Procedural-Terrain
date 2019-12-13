@@ -102,6 +102,17 @@ void ModelLoader::initShaders()
 	// Sahder files for the terrain
 	this->shaders.push_back(new Shader(this->GL_VERSION_MAJOR, this->GL_VERSION_MINOR,
 		"shaders/terrain_vertex_core.glsl", "shaders/terrain_fragment_core.glsl"));
+
+	// Sahder files for the skybox
+	this->shaders.push_back(new Shader(this->GL_VERSION_MAJOR, this->GL_VERSION_MINOR,
+		"shaders/skybox_vertex_core.glsl", "shaders/skybox_fragment_core.glsl"));
+}
+
+void ModelLoader::initSkybox()
+{
+	skybox = new Skybox();
+
+	cout << "Skybox is ready \n";
 }
 
 void ModelLoader::initTerrain()
@@ -136,6 +147,9 @@ bool ModelLoader::initModel(string choiceName)
 	// Clear the mesh once done with it
 	delete mesh;
 
+	// Once this is done, tell the camera that is the model to follow
+	this->camera.setModel(models[0]);
+
 	return fileLoadedCorrectly;
 }
 
@@ -167,6 +181,9 @@ void ModelLoader::initUniforms()
 	this->shaders[SHADER_TERRAIN_PROGRAM]->setMat4fv(ViewMatrix, "ViewMatrix");
 	this->shaders[SHADER_TERRAIN_PROGRAM]->setMat4fv(ProjectionMatrix, "ProjectionMatrix");
 
+	this->shaders[SHADER_SKYBOX_PROGRAM]->setMat4fv(ViewMatrix, "ViewMatrix");
+	this->shaders[SHADER_SKYBOX_PROGRAM]->setMat4fv(ProjectionMatrix, "ProjectionMatrix");
+
 	this->shaders[SHADER_CORE_PROGRAM]->setVec3f(this->light->getAmbient(), "lightAmbient");
 	this->shaders[SHADER_CORE_PROGRAM]->setVec3f(this->light->getDiffuse(), "lightDiffuse");
 	this->shaders[SHADER_CORE_PROGRAM]->setVec3f(this->light->getSpecular(), "lightSpecular");
@@ -184,6 +201,8 @@ void ModelLoader::updateUniforms()
 
 	this->shaders[SHADER_TERRAIN_PROGRAM]->setMat4fv(this->ViewMatrix, "ViewMatrix");
 
+	this->shaders[SHADER_SKYBOX_PROGRAM]->setMat4fv(this->ViewMatrix, "ViewMatrix");
+
 	//Update framebuffer size and projection matrix
 	glfwGetFramebufferSize(this->window, &this->framebufferWidth, &this->framebufferHeight);
 
@@ -197,6 +216,7 @@ void ModelLoader::updateUniforms()
 	this->shaders[SHADER_CORE_PROGRAM]->setMat4fv(this->ProjectionMatrix, "ProjectionMatrix");
 	this->shaders[SHADER_LIGHT_PROGRAM]->setMat4fv(this->ProjectionMatrix, "ProjectionMatrix");
 	this->shaders[SHADER_TERRAIN_PROGRAM]->setMat4fv(this->ProjectionMatrix, "ProjectionMatrix");
+	this->shaders[SHADER_SKYBOX_PROGRAM]->setMat4fv(this->ProjectionMatrix, "ProjectionMatrix");
 }
 
 //Constructors / Destructors
@@ -211,7 +231,7 @@ ModelLoader::ModelLoader(
 	WINDOW_HEIGHT(WINDOW_HEIGHT),
 	GL_VERSION_MAJOR(GL_VERSION_MAJOR),
 	GL_VERSION_MINOR(GL_VERSION_MINOR),
-	camera(glm::vec3(0.f, 0.f, 10.f), glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 1.f, 0.f))
+	camera(glm::vec3(0.f, 30.f, 10.f), glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 1.f, 0.f))
 	//camera(glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 1.f, 0.f))
 {
 	bool fileLoaded = false;
@@ -249,6 +269,8 @@ ModelLoader::ModelLoader(
 	this->initMatrices();
 	this->initShaders();
 
+	this->initSkybox();
+
 	this->initTerrain();
 
 	fileLoaded = this->initModel("creeper.dae");
@@ -284,6 +306,8 @@ ModelLoader::~ModelLoader()
 
 	for (auto*& i : this->models)
 		delete i;
+
+	//delete skybox;
 
 	delete light;
 
@@ -347,6 +371,7 @@ void ModelLoader::updateKeyboardInput()
 	}
 
 	//Camera Controls
+	/*
 	if (glfwGetKey(this->window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		this->camera.move(this->dt, FORWARD);
@@ -371,12 +396,14 @@ void ModelLoader::updateKeyboardInput()
 	{
 		this->camera.move(this->dt, DOWN);
 	}
+	*/
 
 	//Model Interaction
 
 	// Move Player
 	if (glfwGetKey(this->window, GLFW_KEY_UP) == GLFW_PRESS)
 	{
+		this->camera.move();
 
 		float terrainHeight = terrain->getHeightOfTerrain(
 			models[selectedModel]->getPositionX(),
@@ -391,6 +418,8 @@ void ModelLoader::updateKeyboardInput()
 
 	if (glfwGetKey(this->window, GLFW_KEY_DOWN) == GLFW_PRESS)
 	{
+		this->camera.move();
+
 		float terrainHeight = terrain->getHeightOfTerrain(
 			models[selectedModel]->getPositionX(),
 			models[selectedModel]->getPositionZ());
@@ -404,6 +433,8 @@ void ModelLoader::updateKeyboardInput()
 
 	if (glfwGetKey(this->window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
+		this->camera.move();
+
 		float terrainHeight = terrain->getHeightOfTerrain(
 			models[selectedModel]->getPositionX(),
 			models[selectedModel]->getPositionZ());
@@ -417,6 +448,8 @@ void ModelLoader::updateKeyboardInput()
 
 	if (glfwGetKey(this->window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
+		this->camera.move();
+
 		float terrainHeight = terrain->getHeightOfTerrain(
 			models[selectedModel]->getPositionX(),
 			models[selectedModel]->getPositionZ());
@@ -477,6 +510,7 @@ void ModelLoader::updateInput()
 
 	this->updateKeyboardInput();
 	this->updateMouseInput();
+
 	this->camera.updateInput(dt, -1, this->mouseOffsetX, this->mouseOffsetY);
 }
 
@@ -549,6 +583,9 @@ void ModelLoader::render()
 
 	//Update the uniforms
 	this->updateUniforms();
+
+	// Render Skybox
+	this->skybox->render(this->shaders[SHADER_SKYBOX_PROGRAM]);
 
 	// Render Terrain
 	this->terrain->render(this->shaders[SHADER_TERRAIN_PROGRAM]);

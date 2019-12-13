@@ -187,16 +187,8 @@ void Mesh::scaleUp(const vec3 scale)
 
 
 // Position coords setters / getters
-float Mesh::getPositionX() {
-	return this->position.x;
-}
-
-float Mesh::getPositionY() {
-	return this->position.y;
-}
-
-float Mesh::getPositionZ() {
-	return this->position.z;
+vec3 Mesh::getPosition() {
+	return this->position;
 }
 
 void Mesh::setPositionX(float postionX) {
@@ -211,6 +203,11 @@ void Mesh::setPositionZ(float postionZ) {
 	this->position.z = postionZ;
 }
 
+
+
+vec3 Mesh::getRotation() {
+	return this->rotation;
+}
 
 
 void Mesh::render(Shader* shader, vector<Material*> materials, vector<Texture*> textures)

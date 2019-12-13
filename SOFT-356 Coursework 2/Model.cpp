@@ -41,15 +41,15 @@ void Model::move(const vec3 position)
 
 
 float Model::getPositionX() {
-	return this->mesh->getPositionX();
+	return this->mesh->getPosition().x;
 }
 
 float Model::getPositionY() {
-	return this->mesh->getPositionY();
+	return this->mesh->getPosition().y;
 }
 
 float Model::getPositionZ() {
-	return this->mesh->getPositionZ();
+	return this->mesh->getPosition().z;
 }
 
 void Model::setPositionX(float postionX) {
@@ -66,6 +66,10 @@ void Model::setPositionZ(float postionZ) {
 	this->mesh->setPositionZ(postionZ);
 }
 
+
+float Model::getRotationY() {
+	return this->mesh->getRotation().y;
+}
 
 void Model::render(Shader* shader, vector<Texture*> textures)
 {

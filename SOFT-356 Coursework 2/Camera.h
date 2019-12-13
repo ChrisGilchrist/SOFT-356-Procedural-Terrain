@@ -2,12 +2,19 @@
 
 #include "utils.h"
 
+#include "Model.h"
+
 enum direction { FORWARD, BACKWARD, LEFT, RIGHT, UP, DOWN };
 
 class Camera
 {
 private:
 	mat4 ViewMatrix;
+
+	Model* model;
+
+	float distanceFromPlayer = -140;
+	float angleAroundPlayer = 0;
 
 	GLfloat movementSpeed;
 	GLfloat sensitivity;
@@ -35,8 +42,28 @@ public:
 	const vec3 getPosition() const;
 
 
+	// PLayer stuff
+	void calculateCameraPosition(float horDistance, float vertDistance);
+
+	float calculateHorizontalDistance();
+
+	float calculateVerticalDistance();
+	
+	void setModel(Model* model);
+
+	Model* getModel();
+
+
+	// Other player stuff 
+	void calculateZoom();
+
+	void calculatePitch();
+
+	void calculateAngleAroundPlayer();
+
+
 	// Update position vector - Move camera in the direction provided
-	void move(const float& dt, const int direction);
+	void move();
 
 	// Update mouse input - updates the pitch, yaw and roll values
 	void updateMouseInput(const float& dt, const double& offsetX, const double& offsetY);

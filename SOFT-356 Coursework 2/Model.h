@@ -45,6 +45,9 @@ public:
 	void setPositionZ(float postionZ);
 
 
+	float getRotationY();
+
+
 	// Render the model to the scene
 	void render(Shader* shader, vector<Texture*> textures);
 };

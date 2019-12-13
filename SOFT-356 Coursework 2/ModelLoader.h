@@ -11,6 +11,7 @@
 #include "FileParser.h"
 #include "Light.h"
 #include "Terrain.h"
+#include "Skybox.h"
 
 // Used for the clock timing the initialisation of the model
 #include <chrono>
@@ -22,7 +23,8 @@
 enum shader_enum { 
 	SHADER_CORE_PROGRAM = 0, 
 	SHADER_LIGHT_PROGRAM = 1,
-	SHADER_TERRAIN_PROGRAM = 2
+	SHADER_TERRAIN_PROGRAM = 2,
+	SHADER_SKYBOX_PROGRAM = 3
 };
 
 class ModelLoader
@@ -80,8 +82,10 @@ private:
 	//Materials
 	vector<Material*> materials;
 
+	//Skybox
+	Skybox* skybox;
+
 	//Terrains 
-	//vector<Terrain*> terrains;
 	Terrain* terrain;
 
 	//Models
@@ -108,6 +112,8 @@ private:
 	void initOpenGLOptions();
 	void initMatrices();
 	void initShaders();
+
+	void initSkybox();
 
 	void initTerrain();
 

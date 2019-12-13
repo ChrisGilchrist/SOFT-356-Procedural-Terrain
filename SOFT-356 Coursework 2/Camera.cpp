@@ -54,8 +54,39 @@ const vec3 Camera::getPosition() const
 }
 
 
-void Camera::move(const float& dt, const int direction)
+void Camera::calculateCameraPosition(float horDistance, float vertDistance) {
+	float theta = this->model->getRotationY() + angleAroundPlayer;
+	float offsetX = (float)(horDistance * sin(radians(theta)));
+	float offsetZ = (float)(vertDistance * cos(radians(theta)));
+	position.x = this->model->getPositionX() - offsetX;
+	position.z = this->model->getPositionZ() - offsetZ;
+	position.y = this->model->getPositionY() + vertDistance;
+}
+
+float  Camera::calculateHorizontalDistance() {
+	return (float) (distanceFromPlayer * cos(radians(pitch)));
+}
+
+float  Camera::calculateVerticalDistance() {
+	return (float) (distanceFromPlayer * sin(radians(pitch)));
+}
+
+void Camera::setModel(Model* model) {
+	this->model = model;
+}
+
+Model* Camera::getModel() {
+	return this->model;
+}
+
+
+void Camera::move()
 {
+	float horDistance = calculateHorizontalDistance();
+	float vertDistance = calculateVerticalDistance();
+	calculateCameraPosition(horDistance, vertDistance);
+
+	/*
 	switch (direction)
 	{
 	case FORWARD:
@@ -79,7 +110,22 @@ void Camera::move(const float& dt, const int direction)
 	default:
 		break;
 	}
+	*/
 }
+
+
+void Camera::calculateZoom() {
+	distanceFromPlayer -= 0.1f;
+}
+
+void Camera::calculatePitch() {
+	pitch -= 0.1f;
+}
+
+void Camera::calculateAngleAroundPlayer() {
+	angleAroundPlayer -= 0.3f;
+}
+
 
 void Camera::updateMouseInput(const float& dt, const double& offsetX, const double& offsetY)
 {

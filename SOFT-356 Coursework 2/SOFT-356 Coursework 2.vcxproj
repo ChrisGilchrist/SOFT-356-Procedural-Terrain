@@ -133,6 +133,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Skybox.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="stb_image.hpp" />
     <ClInclude Include="Terrain.h" />
@@ -151,6 +152,7 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
@@ -159,6 +161,8 @@
     <None Include="shaders\fragment_core.glsl" />
     <None Include="shaders\light_fragment_core.glsl" />
     <None Include="shaders\light_vertex_core.glsl" />
+    <None Include="shaders\skybox_fragment_core.glsl" />
+    <None Include="shaders\skybox_vertex_core.glsl" />
     <None Include="shaders\terrain_fragment_core.glsl" />
     <None Include="shaders\terrain_vertex_core.glsl" />
     <None Include="shaders\vertex_core.glsl" />
