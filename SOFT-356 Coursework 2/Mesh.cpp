@@ -169,10 +169,48 @@ void Mesh::setScale(const vec3 setScale)
 	this->scale = scale;
 }
 
+void Mesh::move(string direction, float delta) {
+	// Check the direction and change values accordingly
+	checkDirection(direction);
 
-void Mesh::move(const vec3 position)
+	increaseRotation(0, currentTurnSpeed * delta, 0);
+	float distance = currentSpeed * delta;
+	float dx = (float)(distance * sin(radians(rotation.y)));
+	float dz = (float)(distance * cos(radians(rotation.y)));
+	increasePosition(dx, 0, dz);
+	upwardsSpeed += GRAVITY * delta;
+	increasePosition(0, upwardsSpeed * delta, 0);
+
+	// Check if the Y position of the model is below the terrain height, if so set to 0
+	if (getPosition().y < TERRAIN_HEIGHT) {
+		upwardsSpeed = 0;
+		//setPosition().y = TERRAIN_HEIGHT;
+	}
+}
+
+void Mesh::checkDirection(string direction)
 {
-	this->position += position;
+	if (direction == "FORWARD") {
+		this->currentSpeed = RUN_SPEED;
+	} 
+	else if (direction == "BACKWARDS") {
+		this->currentSpeed = -RUN_SPEED;
+	}
+	else {
+		this->currentSpeed = 0;
+	}
+
+
+	if (direction == "TURN_LEFT") {
+		this->currentTurnSpeed = TURN_SPEED;
+		
+	}
+	else if (direction == "TURN_RIGHT") {
+		this->currentTurnSpeed = -TURN_SPEED;
+	}
+	else {
+		this->currentTurnSpeed = 0;
+	}
 }
 
 void Mesh::rotate(const vec3 rotation)
@@ -203,6 +241,18 @@ void Mesh::setPositionZ(float postionZ) {
 	this->position.z = postionZ;
 }
 
+
+void Mesh::increaseRotation(float dx, float dy, float dz) {
+	rotation.x += dx;
+	rotation.y += dy;
+	rotation.z += dz;
+}
+
+void Mesh::increasePosition(float dx, float dy, float dz) {
+	position.x += dx;
+	position.y += dy;
+	position.z += dz;
+}
 
 
 vec3 Mesh::getRotation() {

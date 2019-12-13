@@ -974,7 +974,7 @@ bool FileParser::processColladaFile(string filePath, Mesh*& mesh, vector < Textu
 				vec3(0.f, 0.f, 2.f),
 				vec3(0.f),
 				vec3(0, 0, 0),
-				vec3(1.f)
+				vec3(7.f)
 			);
 
 

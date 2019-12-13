@@ -145,7 +145,7 @@ public:
 	//Functions
 	void updateDt();
 	void updateMouseInput();
-	void updateKeyboardInput();
+	void updateKeyboardInput(float delta);
 	void updateInput();
 	void update();
 	void clearModelInfo();

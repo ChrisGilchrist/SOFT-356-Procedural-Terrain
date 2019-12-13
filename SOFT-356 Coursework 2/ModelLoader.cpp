@@ -39,7 +39,6 @@ void ModelLoader::initWindow(
 
 	glfwGetFramebufferSize(this->window, &this->framebufferWidth, &this->framebufferHeight);
 	glfwSetFramebufferSizeCallback(window, ModelLoader::framebuffer_resize_callback);
-
 	glfwMakeContextCurrent(this->window);	
 }
 
@@ -231,7 +230,7 @@ ModelLoader::ModelLoader(
 	WINDOW_HEIGHT(WINDOW_HEIGHT),
 	GL_VERSION_MAJOR(GL_VERSION_MAJOR),
 	GL_VERSION_MINOR(GL_VERSION_MINOR),
-	camera(glm::vec3(0.f, 30.f, 10.f), glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 1.f, 0.f))
+	camera(glm::vec3(0.f, 100.f, 0.f), glm::vec3(0.f, 10.f, 1.f), glm::vec3(0.f, 1.f, 0.f))
 	//camera(glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 1.f, 0.f))
 {
 	bool fileLoaded = false;
@@ -241,7 +240,7 @@ ModelLoader::ModelLoader(
 	this->framebufferWidth = this->WINDOW_WIDTH;
 	this->framebufferHeight = this->WINDOW_HEIGHT;
 
-	this->camPosition = glm::vec3(0.f, 0.f, 1.f);
+	this->camPosition = glm::vec3(0.f, 0.f, 0.f);
 	this->worldUp = glm::vec3(0.f, 1.f, 0.f);
 	this->camFront = glm::vec3(0.f, 0.f, -1.f);
 
@@ -354,7 +353,7 @@ void ModelLoader::updateMouseInput()
 	this->lastMouseY = this->mouseY;
 }
 
-void ModelLoader::updateKeyboardInput()
+void ModelLoader::updateKeyboardInput(float delta)
 {
 	//Program Controls
 	if (glfwGetKey(this->window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -370,41 +369,10 @@ void ModelLoader::updateKeyboardInput()
 		LoadNewObj();
 	}
 
-	//Camera Controls
-	/*
-	if (glfwGetKey(this->window, GLFW_KEY_W) == GLFW_PRESS)
-	{
-		this->camera.move(this->dt, FORWARD);
-	}
-	if (glfwGetKey(this->window, GLFW_KEY_S) == GLFW_PRESS)
-	{
-		this->camera.move(this->dt, BACKWARD);
-	}
-	if (glfwGetKey(this->window, GLFW_KEY_A) == GLFW_PRESS)
-	{
-		this->camera.move(this->dt, LEFT);
-	}
-	if (glfwGetKey(this->window, GLFW_KEY_D) == GLFW_PRESS)
-	{
-		this->camera.move(this->dt, RIGHT);
-	}
-	if (glfwGetKey(this->window, GLFW_KEY_C) == GLFW_PRESS)
-	{
-		this->camera.move(this->dt, UP);
-	}
-	if (glfwGetKey(this->window, GLFW_KEY_SPACE) == GLFW_PRESS)
-	{
-		this->camera.move(this->dt, DOWN);
-	}
-	*/
-
-	//Model Interaction
 
 	// Move Player
 	if (glfwGetKey(this->window, GLFW_KEY_UP) == GLFW_PRESS)
 	{
-		this->camera.move();
-
 		float terrainHeight = terrain->getHeightOfTerrain(
 			models[selectedModel]->getPositionX(),
 			models[selectedModel]->getPositionZ());
@@ -412,14 +380,15 @@ void ModelLoader::updateKeyboardInput()
 		Model* model = models[selectedModel];
 
 		model->setPositionY(terrainHeight);
+		
 
-		models[selectedModel]->move(vec3(0, 0, 0.5f));
+		// Tell mesh we are going forwards
+		models[selectedModel]->move("FORWARD", dt);
+
 	}
 
 	if (glfwGetKey(this->window, GLFW_KEY_DOWN) == GLFW_PRESS)
 	{
-		this->camera.move();
-
 		float terrainHeight = terrain->getHeightOfTerrain(
 			models[selectedModel]->getPositionX(),
 			models[selectedModel]->getPositionZ());
@@ -428,12 +397,13 @@ void ModelLoader::updateKeyboardInput()
 
 		model->setPositionY(terrainHeight);
 
-		models[selectedModel]->move(vec3(0, 0, -0.5f));
+		models[selectedModel]->move("BACKWARDS", dt);
 	}
 
 	if (glfwGetKey(this->window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
-		this->camera.move();
+
+		//this->camera.move();
 
 		float terrainHeight = terrain->getHeightOfTerrain(
 			models[selectedModel]->getPositionX(),
@@ -442,13 +412,14 @@ void ModelLoader::updateKeyboardInput()
 		Model* model = models[selectedModel];
 
 		model->setPositionY(terrainHeight);
-
-		models[selectedModel]->move(vec3(0.5f, 0, 0));
+		
+		models[selectedModel]->move("TURN_LEFT", dt);
 	}
 
 	if (glfwGetKey(this->window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
-		this->camera.move();
+	
+		//this->camera.move();
 
 		float terrainHeight = terrain->getHeightOfTerrain(
 			models[selectedModel]->getPositionX(),
@@ -457,13 +428,11 @@ void ModelLoader::updateKeyboardInput()
 		Model* model = models[selectedModel];
 
 		model->setPositionY(terrainHeight);
-
-		models[selectedModel]->move(vec3(-0.5f, 0, 0));
+		
+		models[selectedModel]->move("TURN_RIGHT", dt);
 	}
 
-
-
-	// Scale up
+	/* Scale up
 	if (glfwGetKey(this->window, GLFW_KEY_B) == GLFW_PRESS)
 	{
 		models[selectedModel]->scale(vec3(0.001f));
@@ -502,16 +471,27 @@ void ModelLoader::updateKeyboardInput()
 			selectedModel = 0;
 		}
 	}
+
+	*/
 }
 
 void ModelLoader::updateInput()
 {
 	glfwPollEvents();
 
-	this->updateKeyboardInput();
+	this->updateKeyboardInput(dt);
 	this->updateMouseInput();
 
+	/*
+	if (glfwGetKey(this->window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+	{
+
+	}
+	*/
+
 	this->camera.updateInput(dt, -1, this->mouseOffsetX, this->mouseOffsetY);
+	this->camera.move();
+	
 }
 
 void ModelLoader::update()
@@ -654,5 +634,4 @@ void ModelLoader::framebuffer_resize_callback(GLFWwindow* window, int fbW, int f
 {
 	glViewport(0, 0, fbW, fbH);
 };
-
 

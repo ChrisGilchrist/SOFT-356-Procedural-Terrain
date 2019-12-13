@@ -28,6 +28,17 @@ private:
 	vec3 rotation;
 	vec3 scale;
 
+	float RUN_SPEED = 20;
+	float TURN_SPEED = 160;
+	float GRAVITY = -50;
+	float JUMP_POWER = 30;
+	float TERRAIN_HEIGHT = 0;
+
+	float currentSpeed = 0;
+	float currentTurnSpeed = 0;
+	float upwardsSpeed = 0;
+
+
 	mat4 ModelMatrix;
 
 	void initVAO();
@@ -68,7 +79,9 @@ public:
 
 
 	// Control the mesh
-	void move(const vec3 position);
+	void move(string direction, float delta);
+
+	void checkDirection(string direction);
 
 	void rotate(const vec3 rotation);
 
@@ -76,18 +89,16 @@ public:
 
 	vec3 getPosition();
 
-	float getPositionX();
-
-	float getPositionY();
-
-	float getPositionZ();
-
 	void setPositionX(float postionX);
 
 	void setPositionY(float postionY);
 
 	void setPositionZ(float postionZ);
 
+
+	void increaseRotation(float dx, float dy, float dz);
+
+	void increasePosition(float dx, float dy, float dz);
 
 
 	vec3 getRotation();

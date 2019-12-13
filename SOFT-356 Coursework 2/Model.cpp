@@ -14,7 +14,7 @@ Model::Model(
 	}
 
 	this->mesh = new Mesh(*mesh);
-	this->mesh->move(this->position);
+	//this->mesh->move(this->position);
 	this->mesh->setOrigin(this->position);
 }
 
@@ -34,9 +34,9 @@ void Model::scale(const vec3 scale)
 	this->mesh->scaleUp(scale);
 }
 
-void Model::move(const vec3 position)
+void Model::move(string direction, float delta)
 {
-	this->mesh->move(position);
+	this->mesh->move(direction, delta);
 }
 
 

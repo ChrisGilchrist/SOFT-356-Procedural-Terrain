@@ -2,7 +2,7 @@
 
 #include "Camera.h"
 
-// Private 
+/* Private 
 void Camera::updateCameraVectors() {
 	this->front.x = cos(radians(this->yaw)) * cos(radians(this->pitch));
 	this->front.y = sin(radians(this->pitch));
@@ -12,6 +12,7 @@ void Camera::updateCameraVectors() {
 	this->right = normalize(cross(this->front, this->worldUp));
 	this->up = normalize(cross(this->right, this->front));
 }
+*/
 
 // Public 
 Camera::Camera(vec3 position, vec3 direction, vec3 worldUp)
@@ -27,11 +28,12 @@ Camera::Camera(vec3 position, vec3 direction, vec3 worldUp)
 	this->right = vec3(0.f);
 	this->up = worldUp;
 
-	this->pitch = 0.f;
-	this->yaw = -90.f;
+	this->pitch = 20.f;
+	this->yaw = 0.f;
 	this->roll = 0.f;
 
-	this->updateCameraVectors();
+	//this->updateCameraVectors();
+
 }
 
 Camera::~Camera()
@@ -41,9 +43,11 @@ Camera::~Camera()
 
 const mat4 Camera::getViewMatrix()
 {
-	this->updateCameraVectors();
+	//this->updateCameraVectors();
 
-	this->ViewMatrix = lookAt(this->position, this->position + this->front, this->up);
+	// We need to set it so its always looking at the object using its position.
+	vec3 objectPosition = vec3(this->model->getPositionX(), this->model->getPositionY(), this->model->getPositionZ());
+	this->ViewMatrix = lookAt(position, objectPosition, this->up);
 
 	return this->ViewMatrix;
 }
@@ -55,20 +59,25 @@ const vec3 Camera::getPosition() const
 
 
 void Camera::calculateCameraPosition(float horDistance, float vertDistance) {
+	
+	//calc
 	float theta = this->model->getRotationY() + angleAroundPlayer;
 	float offsetX = (float)(horDistance * sin(radians(theta)));
 	float offsetZ = (float)(vertDistance * cos(radians(theta)));
 	position.x = this->model->getPositionX() - offsetX;
 	position.z = this->model->getPositionZ() - offsetZ;
 	position.y = this->model->getPositionY() + vertDistance;
+
 }
 
 float  Camera::calculateHorizontalDistance() {
-	return (float) (distanceFromPlayer * cos(radians(pitch)));
+	//return (float) (distanceFromPlayer * cos(radians(pitch)));
+	return distanceFromPlayer;
 }
 
 float  Camera::calculateVerticalDistance() {
-	return (float) (distanceFromPlayer * sin(radians(pitch)));
+	//return (float) (distanceFromPlayer * sin(radians(pitch)));
+	return distanceFromPlayer;
 }
 
 void Camera::setModel(Model* model) {
@@ -86,50 +95,13 @@ void Camera::move()
 	float vertDistance = calculateVerticalDistance();
 	calculateCameraPosition(horDistance, vertDistance);
 
-	/*
-	switch (direction)
-	{
-	case FORWARD:
-		this->position += this->front * this->movementSpeed * dt;
-		break;
-	case BACKWARD:
-		this->position -= this->front * this->movementSpeed * dt;
-		break;
-	case LEFT:
-		this->position -= this->right * this->movementSpeed * dt;
-		break;
-	case RIGHT:
-		this->position += this->right * this->movementSpeed * dt;
-		break;
-	case UP:
-		this->position -= this->up * this->movementSpeed * dt;
-		break;
-	case DOWN:
-		this->position += this->up * this->movementSpeed * dt;
-		break;
-	default:
-		break;
-	}
-	*/
-}
-
-
-void Camera::calculateZoom() {
-	distanceFromPlayer -= 0.1f;
-}
-
-void Camera::calculatePitch() {
-	pitch -= 0.1f;
-}
-
-void Camera::calculateAngleAroundPlayer() {
-	angleAroundPlayer -= 0.3f;
+	yaw = 180 - (model->getRotationY() + angleAroundPlayer);
 }
 
 
 void Camera::updateMouseInput(const float& dt, const double& offsetX, const double& offsetY)
 {
-	//Update pitch yaw and roll
+	//Update pitch yaw and roll	
 	this->pitch += static_cast<GLfloat>(offsetY)* this->sensitivity* dt;
 	this->yaw += static_cast<GLfloat>(offsetX)* this->sensitivity* dt;
 
@@ -141,6 +113,7 @@ void Camera::updateMouseInput(const float& dt, const double& offsetX, const doub
 	// Reset if it goes above 360
 	if (this->yaw > 360.f || this->yaw < -360.f)
 		this->yaw = 0.f;
+		
 }
 
 void Camera::updateInput(const float& dt, const int direction, const double& offsetX, const double& offsetY)

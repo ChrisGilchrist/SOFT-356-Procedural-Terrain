@@ -29,7 +29,7 @@ public:
 
 	void scale(const vec3 scale);
 
-	void move(const vec3 position);
+	void move(string direction, float delta);
 
 
 	float getPositionX();

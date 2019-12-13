@@ -13,7 +13,7 @@ private:
 
 	Model* model;
 
-	float distanceFromPlayer = -140;
+	float distanceFromPlayer = 50;
 	float angleAroundPlayer = 0;
 
 	GLfloat movementSpeed;
@@ -53,13 +53,6 @@ public:
 
 	Model* getModel();
 
-
-	// Other player stuff 
-	void calculateZoom();
-
-	void calculatePitch();
-
-	void calculateAngleAroundPlayer();
 
 
 	// Update position vector - Move camera in the direction provided
