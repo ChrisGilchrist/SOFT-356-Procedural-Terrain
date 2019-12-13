@@ -129,7 +129,46 @@ void ModelLoader::initTerrain()
 	cout << "Terrain is ready \n";
 }
 
-bool ModelLoader::initModel(string choiceName)
+void ModelLoader::initWorldModels() {
+	bool fileLoadedCorrectly = false;
+	string materialFileName = "";
+
+	// Do this process 10 times for 10 lamps
+	for (int i = 0; i < 20; i++) {
+
+		// Init array of meshes
+		Mesh* mesh;
+
+		fileLoadedCorrectly = modelParser.processObjFile("models/lamp.obj", mesh, materialFileName);
+		fileLoadedCorrectly = modelParser.processMtlFile("models/" + materialFileName, textures, materials, textureCount);
+
+		// Now take all the materials and meshes to load in a object.
+		modelParser.createObject(mesh, textures, materials, models);
+
+		cout << i + " Model is ready! \n";
+
+		delete mesh;
+	}
+	
+
+	// Starting from 1 onwards (because 0 will be the player model in models array)
+	for (int j = 1; j < models.size(); j++) {
+
+		// Generate random num between 1 and 40
+		float xPosition = rand() % 500 + 1;
+		float zPosition = rand() % 500 + 1;
+
+		// Set the lamp position to a random location on grid
+		float height = terrain->getHeightOfTerrain(xPosition, zPosition);
+		vec3 position(xPosition, height, zPosition);
+		models[j]->setPositionX(position.x);
+		models[j]->setPositionY(position.y);
+		models[j]->setPositionZ(position.z);
+	}
+	
+}
+
+bool ModelLoader::initPlayer(string choiceName)
 {
 	bool fileLoadedCorrectly = false;
 
@@ -272,7 +311,7 @@ ModelLoader::ModelLoader(
 
 	this->initTerrain();
 
-	fileLoaded = this->initModel("creeper.dae");
+	fileLoaded = this->initPlayer("creeper.dae");
 	fileLoaded = true;
 	// If it is not true then we ask for them to choose another file
 	if (!fileLoaded)
@@ -281,11 +320,16 @@ ModelLoader::ModelLoader(
 		LoadNewObj();
 	}
 
+	// Create the other models
+	this->initWorldModels();
+
 	this->initLights();
 	this->initUniforms();
 
 	// Get the console window for later use
 	this->hwnd = GetConsoleWindow();
+
+	srand(time(NULL));
 }
 
 ModelLoader::~ModelLoader()
@@ -506,7 +550,7 @@ void ModelLoader::LoadNewObj()
 
 	this->clearScene = false;
 
-	fileCorrect = this->initModel(choice);
+	fileCorrect = this->initPlayer(choice);
 
 	if (!fileCorrect)
 	{

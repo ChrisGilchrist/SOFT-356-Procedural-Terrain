@@ -117,8 +117,10 @@ private:
 
 	void initTerrain();
 
-	// Load Model
-	bool initModel(string choiceName);
+	void initWorldModels();
+
+	// Load Player Model
+	bool initPlayer(string choiceName);
 
 	void initLights();
 	void initUniforms();

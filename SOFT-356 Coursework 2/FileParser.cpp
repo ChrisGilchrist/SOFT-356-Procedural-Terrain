@@ -993,6 +993,7 @@ bool FileParser::processColladaFile(string filePath, Mesh*& mesh, vector < Textu
 
 void FileParser::createObject(Mesh*& mesh, vector < Texture* >& textures, vector < Material* >& materials, vector < Model* >& models)
 {
+	/*
 	// If there is more than one model then space them out along x axis
 	if (models.size() > 0) {
 		models.push_back(new Model(
@@ -1010,6 +1011,12 @@ void FileParser::createObject(Mesh*& mesh, vector < Texture* >& textures, vector
 			mesh
 		));
 	}
+	*/
 
-
+	models.push_back(new Model(
+		// Do this so it puts the model in the middle of the terrain to start off 
+		vec3(20.f, 0.f, 20.f),
+		materials,
+		mesh
+	));
 }
