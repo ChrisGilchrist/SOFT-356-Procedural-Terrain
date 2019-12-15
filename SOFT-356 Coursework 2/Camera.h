@@ -41,6 +41,10 @@ public:
 
 	const vec3 getPosition() const;
 
+	float getPitch();
+
+	float getYaw();
+
 
 	// PLayer stuff
 	void calculateCameraPosition(float horDistance, float vertDistance);

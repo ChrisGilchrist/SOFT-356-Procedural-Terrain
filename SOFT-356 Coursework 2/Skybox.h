@@ -9,19 +9,34 @@ class Skybox
 {
 private:
 
-	unsigned int cubemapTexture;
+	unsigned int dayTexture;
+	unsigned int nightTexture;
 
-	vector<std::string> faces
+	vector<std::string> dayFaces
 	{
 		"skybox/right.png",
 		"skybox/left.png",
 		"skybox/top.png",
 		"skybox/bottom.png",
-		"skybox/front.png",
-		"skybox/back.png"
+		"skybox/back.png",
+		"skybox/front.png"
 	};
 
-	float SIZE = 500.0f;
+	vector<std::string> nightFaces
+	{
+		"skybox/nightRight.png",
+		"skybox/nightLeft.png",
+		"skybox/nightTop.png",
+		"skybox/nightBottom.png",
+		"skybox/nightBack.png",
+		"skybox/nightFront.png"
+	};
+
+	float SIZE = 300.0f;
+
+	float time = 0;
+
+	float blendFactor = 0.67434235f;
 
 	vector<float> VERTICES = {
 		-SIZE,  SIZE, -SIZE,
@@ -84,7 +99,10 @@ public:
 
 	unsigned int loadCubemap(vector<std::string> faces);
 
+	void bindTextures(Shader* shader, float deltaTime);
+
+
 	// Render the mesh to the scene
-	void render(Shader* shader);
+	void render(Shader* shader, float deltaTime);
 
 };

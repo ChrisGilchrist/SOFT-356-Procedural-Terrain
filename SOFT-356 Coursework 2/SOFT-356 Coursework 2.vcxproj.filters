@@ -69,6 +69,9 @@
     <ClInclude Include="Skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MousePicker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">
@@ -110,6 +113,9 @@
     <ClCompile Include="Skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MousePicker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\fragment_core.glsl">
@@ -119,9 +125,6 @@
       <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="shaders\light_vertex_core.glsl">
-      <Filter>Resource Files\shaders</Filter>
-    </None>
-    <None Include="shaders\vertex_core.glsl">
       <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="packages.config" />
@@ -135,6 +138,9 @@
       <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="shaders\skybox_vertex_core.glsl">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\vertex_core.glsl">
       <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>

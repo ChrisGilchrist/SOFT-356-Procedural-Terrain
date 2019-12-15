@@ -19,6 +19,4 @@ void main()
 	vs_normal = mat3(ModelMatrix) * vertex_normal;
 
 	gl_Position = ProjectionMatrix * ViewMatrix * ModelMatrix * vec4(vertex_position, 1.f); 
-	// SHOULDNT DO THIS IN THE SHADER, SVEN SAID THAT IT SLOWS IT DOWN
-	// NEED TO DO WHAT HE DID IN THE LECTURE AND THEN PASS IT IN ONCE YOU HAVE CALCULATED IT
 }

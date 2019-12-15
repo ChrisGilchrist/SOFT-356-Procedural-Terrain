@@ -12,6 +12,7 @@
 #include "Light.h"
 #include "Terrain.h"
 #include "Skybox.h"
+#include "MousePicker.h"
 
 // Used for the clock timing the initialisation of the model
 #include <chrono>
@@ -70,6 +71,8 @@ private:
 	float nearPlane;
 	float farPlane;
 
+	MousePicker mousePicker;
+
 	// ObjectLoader
 	FileParser modelParser;
 
@@ -101,6 +104,10 @@ private:
 	int selectedModel = 0;
 
 	HWND hwnd;
+
+	// Skybox variables
+	float ROTATE_SPEED = 1.f;
+	float currentRotation = 0;
 
 	//Private functions
 	void initGLFW();

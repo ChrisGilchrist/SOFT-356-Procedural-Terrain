@@ -58,7 +58,6 @@ void ModelLoader::initGLEW()
 void ModelLoader::initOpenGLOptions()
 {
 	glEnable(GL_DEPTH_TEST);
-
 	//glEnable(GL_CULL_FACE); // TODO - Remove these, These are causing the issue with transparent parts of the model 
 	//glCullFace(GL_BACK); // TODO - Remove these These are causing the issue with transparent parts of the model 
 	glFrontFace(GL_CCW);
@@ -69,14 +68,17 @@ void ModelLoader::initOpenGLOptions()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // <!--- This shows the model in a wireframe view
 
-	//Input
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//Input -- Disable this so they can see mouse and use mouse picker (TEMP)
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 void ModelLoader::initMatrices()
 {
 	this->ViewMatrix = glm::mat4(1.f);
 	this->ViewMatrix = glm::lookAt(this->camPosition, this->camPosition + this->camFront, this->worldUp);
+
+	// Set the picker view matrix
+	//this->mousePicker.setViewMatrix(ViewMatrix);
 
 	// Deals with the resize of the screen
 	this->ProjectionMatrix = glm::mat4(1.f);
@@ -86,6 +88,9 @@ void ModelLoader::initMatrices()
 		this->nearPlane,
 		this->farPlane
 	);
+
+	// Set the picker Projection matrix
+	this->mousePicker.setPorjection(ProjectionMatrix);
 }
 
 void ModelLoader::initShaders()
@@ -125,6 +130,9 @@ void ModelLoader::initTerrain()
 		vec3(0, 0, 0),
 		vec3(1.f)
 	);
+
+	// Pass this to the mouse picker for use later
+	mousePicker.setTerrain(terrain);
 
 	cout << "Terrain is ready \n";
 }
@@ -239,6 +247,9 @@ void ModelLoader::updateUniforms()
 	//Update view matrix (camera)
 	this->ViewMatrix = this->camera.getViewMatrix();
 
+	// Set the picker view matrix
+	this->mousePicker.setViewMatrix(ViewMatrix);
+
 	this->shaders[SHADER_CORE_PROGRAM]->setMat4fv(this->ViewMatrix, "ViewMatrix");
 	this->shaders[SHADER_CORE_PROGRAM]->setVec3f(this->camera.getPosition(), "cameraPos");
 
@@ -246,8 +257,19 @@ void ModelLoader::updateUniforms()
 
 	this->shaders[SHADER_TERRAIN_PROGRAM]->setMat4fv(this->ViewMatrix, "ViewMatrix");
 	this->shaders[SHADER_TERRAIN_PROGRAM]->setVec3f(this->camera.getPosition(), "cameraPos");
+	
+	// We need to remove the last column of values
+	auto matrix = this->ViewMatrix;
+	matrix[3] = glm::vec4{ 0.0, 0.0, 0.0, matrix[3][3] };
 
-	this->shaders[SHADER_SKYBOX_PROGRAM]->setMat4fv(this->ViewMatrix, "ViewMatrix");
+	// We want to add rotation to the view matrix
+	currentRotation += ROTATE_SPEED * dt;
+	//glm::rotate(radians(currentRotation), vec4(0, 1, 0, 0), ViewMatrix, ViewMatrix);
+	matrix = rotate(matrix, radians(currentRotation), vec3(0, 1, 0));
+
+	this->shaders[SHADER_SKYBOX_PROGRAM]->setMat4fv(matrix, "ViewMatrix");
+	
+
 
 	//Update framebuffer size and projection matrix
 	glfwGetFramebufferSize(this->window, &this->framebufferWidth, &this->framebufferHeight);
@@ -277,7 +299,8 @@ ModelLoader::ModelLoader(
 	WINDOW_HEIGHT(WINDOW_HEIGHT),
 	GL_VERSION_MAJOR(GL_VERSION_MAJOR),
 	GL_VERSION_MINOR(GL_VERSION_MINOR),
-	camera(glm::vec3(0.f, 100.f, 0.f), glm::vec3(0.f, 10.f, 1.f), glm::vec3(0.f, 1.f, 0.f))
+	camera(glm::vec3(0.f, 100.f, 0.f), glm::vec3(0.f, 10.f, 1.f), glm::vec3(0.f, 1.f, 0.f)),
+	mousePicker(camera)
 	//camera(glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 1.f, 0.f))
 {
 	bool fileLoaded = false;
@@ -315,9 +338,9 @@ ModelLoader::ModelLoader(
 	this->initMatrices();
 	this->initShaders();
 
-	this->initSkybox();
-
 	this->initTerrain();
+
+	this->initSkybox();
 
 	fileLoaded = this->initPlayer("creeper.dae");
 	fileLoaded = true;
@@ -507,6 +530,17 @@ void ModelLoader::updateInput()
 
 	this->camera.updateInput(dt, -1, this->mouseOffsetX, this->mouseOffsetY);
 	this->camera.move();
+
+	// Lets use the Mouse Picker
+	this->mousePicker.update(window);
+	vec3 point = mousePicker.getCurrentTerrainPoint();
+	//vec3 point = mousePicker.getCurrentRay();
+	cout << point.x << ',' << point.y << ',' << point.z <<'\n';
+
+	// Lets set the position of the lamp #1 which is models(1) in the array
+	models[1]->setPositionX(point.x);
+	models[1]->setPositionY(point.y);
+	models[1]->setPositionZ(point.z);
 	
 }
 
@@ -580,11 +614,11 @@ void ModelLoader::render()
 	//Update the uniforms
 	this->updateUniforms();
 
-	// Render Skybox
-	this->skybox->render(this->shaders[SHADER_SKYBOX_PROGRAM]);
-
 	// Render Terrain
 	this->terrain->render(this->shaders[SHADER_TERRAIN_PROGRAM]);
+
+	// Render Skybox
+	this->skybox->render(this->shaders[SHADER_SKYBOX_PROGRAM], dt);
 
 	// Render lamp - stays in same regardless
 	this->light->render(this->shaders[SHADER_LIGHT_PROGRAM]);

@@ -57,6 +57,14 @@ const vec3 Camera::getPosition() const
 	return this->position;
 }
 
+float Camera::getPitch() {
+	return this->pitch;
+}
+
+float Camera::getYaw() {
+	return this->yaw;
+}
+
 
 void Camera::calculateCameraPosition(float horDistance, float vertDistance) {
 	
