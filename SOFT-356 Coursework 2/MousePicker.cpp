@@ -17,13 +17,9 @@ vec3 MousePicker::getCurrentTerrainPoint() {
 void MousePicker::update(GLFWwindow* window) {
 
 	// Create new view matrix
-	glm::mat4 view_matrix{};
+	//glm::mat4 view_matrix{};
 
-	view_matrix = glm::rotate(view_matrix, glm::radians(camera.getPitch()), { 1, 0, 0 });
-	view_matrix = glm::rotate(view_matrix, glm::radians(camera.getYaw()), { 0, 1, 0 });
-	view_matrix = glm::translate(view_matrix, -camera.getPosition());
-
-	//viewMatrix = camera.getViewMatrix();
+	viewMatrix = camera.getViewMatrix();
 
 	currentRay = calculateMouseRay(window);
 
@@ -44,8 +40,6 @@ vec3 MousePicker::calculateMouseRay(GLFWwindow* window) {
 	float mouseX = mouse.x;
 	float mouseY = mouse.y;
 
-	cout << mouseX << ',' << mouseY << '\n';
-
 	vec2 normalisedCoords = getNormalisedDeviceCoord(mouseX, mouseY, window);
 	vec4 clipCoords = vec4(normalisedCoords.x, normalisedCoords.y, -1.f, 1.f);
 	vec4 eyeCoords = toEyeCoords(clipCoords);
@@ -58,7 +52,6 @@ vec3 MousePicker::toWorldCoords(vec4 eyeCoords) {
 
 	mat4 invertedView = inverse(viewMatrix);
 	vec4 rayWorld = invertedView * eyeCoords;
-	//vec4 rayWorld = transform();
 	vec3 mouseRay = vec3(rayWorld.x, rayWorld.y, rayWorld.z);
 	mouseRay = glm::normalize(mouseRay);
 	return mouseRay;
@@ -151,8 +144,10 @@ bool MousePicker::isUnderGround(vec3 testPoint) {
 	Terrain* terrain = getTerrain(testPoint.x, testPoint.z);
 	float height = 0;
 
-	height = terrain->getHeightOfTerrain(testPoint.x, testPoint.z);
-
+	if (terrain != nullptr) {
+		height = terrain->getHeightOfTerrain(testPoint.x, testPoint.z);
+	}
+	
 	if (testPoint.y < height) {
 		return true;
 	}

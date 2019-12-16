@@ -12,9 +12,14 @@ class HeightsGenerator
 private:
 
 	const int MAX_VALUE = 10000;
-	const float AMPLITUDE = 70.0f;
+	const float AMPLITUDE = 300.0f;
 
 	unsigned int seed;
+
+	int OCTAVES = 5;
+	float ROUGHNESS = 0.35f;
+	int xOffset = 0;
+	int zOffset = 0;
 
 public:
 
@@ -24,7 +29,7 @@ public:
 
 	float getSmoothNoise(int x, int z);
 
-	float getInterpolateNoise(float x, float y);
+	float getInterpolatedNoise(float x, float y);
 
 	float interpolate(float a, float b, float blend);
 

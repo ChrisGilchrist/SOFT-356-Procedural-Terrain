@@ -2,18 +2,6 @@
 
 #include "Camera.h"
 
-/* Private 
-void Camera::updateCameraVectors() {
-	this->front.x = cos(radians(this->yaw)) * cos(radians(this->pitch));
-	this->front.y = sin(radians(this->pitch));
-	this->front.z = sin(radians(this->yaw)) * cos(radians(this->pitch));
-	this->front = normalize(this->front);
-
-	this->right = normalize(cross(this->front, this->worldUp));
-	this->up = normalize(cross(this->right, this->front));
-}
-*/
-
 // Public 
 Camera::Camera(vec3 position, vec3 direction, vec3 worldUp)
 {
@@ -31,9 +19,6 @@ Camera::Camera(vec3 position, vec3 direction, vec3 worldUp)
 	this->pitch = 30.f;
 	this->yaw = 0.f;
 	this->roll = 0.f;
-
-	//this->updateCameraVectors();
-
 }
 
 Camera::~Camera()
@@ -43,8 +28,6 @@ Camera::~Camera()
 
 const mat4 Camera::getViewMatrix()
 {
-	//this->updateCameraVectors();
-
 	// We need to set it so its always looking at the object using its position.
 	vec3 objectPosition = vec3(this->model->getPositionX(), this->model->getPositionY(), this->model->getPositionZ());
 	this->ViewMatrix = lookAt(position, objectPosition, this->up);

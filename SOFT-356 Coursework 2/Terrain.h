@@ -16,8 +16,8 @@ class Terrain
 {
 private:
 
-	float SIZE = 800;
-	float VERTEX_COUNT = 512;
+	float SIZE = 1600;
+	float VERTEX_COUNT = 128;
 	const float MAX_PIXEL_COLOUR = 256 * 256 * 256;
 
 	int count = VERTEX_COUNT * VERTEX_COUNT;

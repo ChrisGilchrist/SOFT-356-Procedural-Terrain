@@ -29,9 +29,6 @@ private:
 	GLfloat yaw;
 	GLfloat roll;
 
-	// Update the camera vectors
-	void updateCameraVectors();
-
 public:
 	Camera(vec3 position, vec3 direction, vec3 worldUp);
 

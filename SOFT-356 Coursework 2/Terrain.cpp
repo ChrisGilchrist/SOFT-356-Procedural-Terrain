@@ -197,6 +197,7 @@ vec3 Terrain::calculateNormal(int x, int z, HeightsGenerator generator) {
 }
 
 float Terrain::getHeightOfTerrain(float worldX, float worldZ) {
+
 	float terrainX = worldX - x;
 	float terrainZ = worldZ - z;
 
@@ -212,6 +213,12 @@ float Terrain::getHeightOfTerrain(float worldX, float worldZ) {
 	float xCoord = fmod(terrainX, gridSquareSize) / gridSquareSize;
 	float zCoord = fmod(terrainZ, gridSquareSize) / gridSquareSize;
 	float answer = 0.0f;
+
+	// This check is in place to ensure it doesn't throw a vector out of bounds exception
+	if (gridX >= VERTEX_COUNT - 1 || gridZ >= VERTEX_COUNT - 1) {
+		return 0;
+	}
+
 
 	if (xCoord <= (1 - zCoord)) {
 		answer = barrycentric(

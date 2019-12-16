@@ -28,9 +28,9 @@ private:
 	vec3 rotation;
 	vec3 scale;
 
-	float RUN_SPEED = 20;
+	float RUN_SPEED = 60;
 	float TURN_SPEED = 160;
-	float GRAVITY = -50;
+	float GRAVITY = -80;
 	float JUMP_POWER = 30;
 
 	float currentSpeed = 0;

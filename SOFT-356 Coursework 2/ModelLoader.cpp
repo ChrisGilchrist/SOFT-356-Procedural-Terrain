@@ -205,11 +205,11 @@ void ModelLoader::initLights()
 	light = new Light(
 		//vec3(10.f, 5.f, -1.f), // Closer to models
 		//vec3(20.f, 10.f, -1.f),
-		vec3(200.f, 200.f, 300.f),
+		vec3(200.f, 500.f, 600.f),
 		vec3(0.f),
 		vec3(0, 0, 0),
 		//vec3(0.5f),
-		vec3(20.f),
+		vec3(30.f),
 		vec3(0.8f, 0.8f, 0.8f),
 		vec3(0.8f, 0.8f, 0.8f),
 		vec3(1.0f, 1.0f, 1.0f)
@@ -542,15 +542,15 @@ void ModelLoader::updateInput()
 	this->camera.move();
 
 	// Lets use the Mouse Picker
-	//this->mousePicker.update(window);
-	//vec3 point = mousePicker.getCurrentTerrainPoint();
+	this->mousePicker.update(window);
+	vec3 point = mousePicker.getCurrentTerrainPoint();
 	//vec3 point = mousePicker.getCurrentRay();
 	//cout << point.x << ',' << point.y << ',' << point.z <<'\n';
 
 	// Lets set the position of the lamp #1 which is models(1) in the array
-	//models[1]->setPositionX(point.x);
-	//models[1]->setPositionY(point.y);
-	//models[1]->setPositionZ(point.z);
+	models[1]->setPositionX(point.x);
+	models[1]->setPositionY(point.y);
+	models[1]->setPositionZ(point.z);
 	
 }
 

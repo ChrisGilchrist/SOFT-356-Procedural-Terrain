@@ -6,30 +6,30 @@
 HeightsGenerator::HeightsGenerator()
 {
 
+	xOffset = 0 * (128 - 1);
+	zOffset = 0 * (128 - 1);
+
 	// Generate the seed number
 	srand(time(NULL));
 	float randNum = genRandomSeed(MAX_VALUE);
 	// Set the seed
 	this->seed = randNum;
-
-	cout << genRandomNumber();
-	cout << genRandomNumber();
-	cout << genRandomNumber();
-
 }
 
 float HeightsGenerator::generateHeight(int x, int z) {
 
-	float total = getInterpolateNoise(x / 20.0f, z / 20.0f) * AMPLITUDE;
-
-	//float total = getInterpolateNoise(x / 4.0f, z / 4.0f) * AMPLITUDE;
-	//total += getInterpolateNoise(x / 2.0f, z / 2.0f) * AMPLITUDE / 3.0f;
-	//total += getInterpolateNoise(x, z) * AMPLITUDE / 9.0f;
+	float total = 0;
+	float d = (float)pow(2, OCTAVES - 1);
+	for (int i = 0; i < OCTAVES; i++) {
+		float freq = (float)(pow(2, i) / d);
+		float amp = (float)pow(ROUGHNESS, i) * AMPLITUDE;
+		total += getInterpolatedNoise((x + xOffset) * freq, (z + zOffset) * freq) * amp;
+	}
 	return total;
 
 }
 
-float HeightsGenerator::getInterpolateNoise(float x, float z) {
+float HeightsGenerator::getInterpolatedNoise(float x, float z) {
 	int intX = (int)x;
 	int intZ = (int)z;
 	float fracX = x - intX;
@@ -46,22 +46,21 @@ float HeightsGenerator::getInterpolateNoise(float x, float z) {
 
 float HeightsGenerator::interpolate(float a, float b, float blend) {
 	double theta = blend * M_PI;
-	float f = (float)(1.0f - cos(theta)) * 0.5f;
-	return a * (1.0f - f) + b * f;
+	float f = (float)(1.f - cos(theta)) * 0.5f;
+	return a * (1.f - f) + b * f;
 }
 
 float HeightsGenerator::getSmoothNoise(int x, int z) {
 
 	float corners = (getNoise(x - 1, z - 1) + getNoise(x + 1, z - 1) + getNoise(x - 1, z + 1)
-		+ getNoise(x + 1, z + 1)) / 16.0f;
+		+ getNoise(x + 1, z + 1)) / 16.f;
 
 	float sides = (getNoise(x - 1, z) + getNoise(x + 1, z) + getNoise(x, z - 1)
-		+ getNoise(x, z + 1)) / 8.0f;
+		+ getNoise(x, z + 1)) / 8.f;
 
-	float center = getNoise(x, z) / 4.0f;
+	float center = getNoise(x, z) / 4.f;
 
 	return corners + sides + center;
-
 
 }
 
