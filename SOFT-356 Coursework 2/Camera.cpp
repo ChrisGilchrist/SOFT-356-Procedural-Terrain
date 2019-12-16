@@ -28,7 +28,7 @@ Camera::Camera(vec3 position, vec3 direction, vec3 worldUp)
 	this->right = vec3(0.f);
 	this->up = worldUp;
 
-	this->pitch = 20.f;
+	this->pitch = 30.f;
 	this->yaw = 0.f;
 	this->roll = 0.f;
 
@@ -71,7 +71,7 @@ void Camera::calculateCameraPosition(float horDistance, float vertDistance) {
 	//calc
 	float theta = this->model->getRotationY() + angleAroundPlayer;
 	float offsetX = (float)(horDistance * sin(radians(theta)));
-	float offsetZ = (float)(vertDistance * cos(radians(theta)));
+	float offsetZ = (float)(horDistance * cos(radians(theta)));
 	position.x = this->model->getPositionX() - offsetX;
 	position.z = this->model->getPositionZ() - offsetZ;
 	position.y = this->model->getPositionY() + vertDistance;
@@ -79,12 +79,12 @@ void Camera::calculateCameraPosition(float horDistance, float vertDistance) {
 }
 
 float  Camera::calculateHorizontalDistance() {
-	//return (float) (distanceFromPlayer * cos(radians(pitch)));
+	return (float) (distanceFromPlayer * cos(radians(pitch)));
 	return distanceFromPlayer;
 }
 
 float  Camera::calculateVerticalDistance() {
-	//return (float) (distanceFromPlayer * sin(radians(pitch)));
+	return (float) (distanceFromPlayer * sin(radians(pitch)));
 	return distanceFromPlayer;
 }
 
@@ -96,6 +96,18 @@ Model* Camera::getModel() {
 	return this->model;
 }
 
+// Move up and down
+void Camera::calculatePitch(const float& dt, const double& offsetY) {
+	float pitchChange = static_cast<GLfloat>(offsetY) * 0.1;
+	pitch -= pitchChange;
+}
+
+// Move left and right
+void Camera::calculateAngleAroundPlayer(const float& dt, const double& offsetX) {
+	float angleChange = static_cast<GLfloat>(offsetX) * 0.3;
+	angleAroundPlayer -= angleChange;
+}
+
 
 void Camera::move()
 {
@@ -104,27 +116,4 @@ void Camera::move()
 	calculateCameraPosition(horDistance, vertDistance);
 
 	yaw = 180 - (model->getRotationY() + angleAroundPlayer);
-}
-
-
-void Camera::updateMouseInput(const float& dt, const double& offsetX, const double& offsetY)
-{
-	//Update pitch yaw and roll	
-	this->pitch += static_cast<GLfloat>(offsetY)* this->sensitivity* dt;
-	this->yaw += static_cast<GLfloat>(offsetX)* this->sensitivity* dt;
-
-	if (this->pitch > 80.f)
-		this->pitch = 80.f;
-	else if (this->pitch < -80.f)
-		this->pitch = -80.f;
-
-	// Reset if it goes above 360
-	if (this->yaw > 360.f || this->yaw < -360.f)
-		this->yaw = 0.f;
-		
-}
-
-void Camera::updateInput(const float& dt, const int direction, const double& offsetX, const double& offsetY)
-{
-	this->updateMouseInput(dt, offsetX, offsetY);
 }

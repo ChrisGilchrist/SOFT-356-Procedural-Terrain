@@ -58,14 +58,13 @@ public:
 	Model* getModel();
 
 
+	void calculatePitch(const float& dt, const double& offsetY);
+
+	void calculateAngleAroundPlayer(const float& dt, const double& offsetX);
+
+
 
 	// Update position vector - Move camera in the direction provided
 	void move();
-
-	// Update mouse input - updates the pitch, yaw and roll values
-	void updateMouseInput(const float& dt, const double& offsetX, const double& offsetY);
-
-	// Upate Input - calls update mouse input
-	void updateInput(const float& dt, const int direction, const double& offsetX, const double& offsetY);
 
 };

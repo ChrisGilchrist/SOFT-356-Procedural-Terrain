@@ -299,7 +299,7 @@ ModelLoader::ModelLoader(
 	WINDOW_HEIGHT(WINDOW_HEIGHT),
 	GL_VERSION_MAJOR(GL_VERSION_MAJOR),
 	GL_VERSION_MINOR(GL_VERSION_MINOR),
-	camera(glm::vec3(0.f, 100.f, 0.f), glm::vec3(0.f, 10.f, 1.f), glm::vec3(0.f, 1.f, 0.f)),
+	camera(glm::vec3(0.f, 1.f, 0.f), glm::vec3(0.f, 10.f, 1.f), glm::vec3(0.f, 1.f, 0.f)),
 	mousePicker(camera)
 	//camera(glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 1.f, 0.f))
 {
@@ -471,6 +471,17 @@ void ModelLoader::updateKeyboardInput(float delta)
 		models[selectedModel]->move("JUMP", dt, terrain);
 	}
 
+
+	if (glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+	{
+		this->camera.calculatePitch(dt, mouseOffsetY);
+	}
+
+	if (glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+	{
+		this->camera.calculateAngleAroundPlayer(dt, mouseOffsetX);
+	}
+
 	/* Scale up
 	if (glfwGetKey(this->window, GLFW_KEY_B) == GLFW_PRESS)
 	{
@@ -528,19 +539,18 @@ void ModelLoader::updateInput()
 	}
 	*/
 
-	this->camera.updateInput(dt, -1, this->mouseOffsetX, this->mouseOffsetY);
 	this->camera.move();
 
 	// Lets use the Mouse Picker
-	this->mousePicker.update(window);
-	vec3 point = mousePicker.getCurrentTerrainPoint();
+	//this->mousePicker.update(window);
+	//vec3 point = mousePicker.getCurrentTerrainPoint();
 	//vec3 point = mousePicker.getCurrentRay();
-	cout << point.x << ',' << point.y << ',' << point.z <<'\n';
+	//cout << point.x << ',' << point.y << ',' << point.z <<'\n';
 
 	// Lets set the position of the lamp #1 which is models(1) in the array
-	models[1]->setPositionX(point.x);
-	models[1]->setPositionY(point.y);
-	models[1]->setPositionZ(point.z);
+	//models[1]->setPositionX(point.x);
+	//models[1]->setPositionY(point.y);
+	//models[1]->setPositionZ(point.z);
 	
 }
 

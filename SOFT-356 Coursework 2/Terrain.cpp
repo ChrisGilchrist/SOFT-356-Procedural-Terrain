@@ -228,6 +228,7 @@ float Terrain::getHeightOfTerrain(float worldX, float worldZ) {
 			glm::vec2{ xCoord, zCoord });
 	}
 
+	// Maybe add a little offset as for some reason it is slightly off//
 	return answer;
 }
 
