@@ -111,6 +111,33 @@ void Skybox::bindTextures(Shader* shader, float deltaTime) {
 
 void Skybox::render(Shader* shader, float deltaTime) {
 
+	time += deltaTime * 1000;
+	time = std::fmod(time, 24000);
+	GLuint texture1;
+	GLuint texture2;
+	float blendFactor = 0.0;
+
+	if (time >= 0 && time < 5000) {
+		texture1 = nightTexture;
+		texture2 = nightTexture;
+		blendFactor = (time - 0) / (5000 - 0);
+	}
+	else if (time >= 5000 && time < 8000) {
+		texture1 = nightTexture;
+		texture2 = dayTexture;
+		blendFactor = (time - 5000) / (8000 - 5000);
+	}
+	else if (time >= 8000 && time < 21000) {
+		texture1 = dayTexture;
+		texture2 = dayTexture;
+		blendFactor = (time - 8000) / (21000 - 8000);
+	}
+	else {
+		texture1 = dayTexture;
+		texture2 = nightTexture;
+		blendFactor = (time - 21000) / (24000 - 21000);
+	}
+
 	// SET THIS TEMP, SO WE CAN SEE INSIDE OF BOX
 	glFrontFace(GL_CW);
 
@@ -127,12 +154,12 @@ void Skybox::render(Shader* shader, float deltaTime) {
 	glDepthRange(1.f, 1.f);
 	shader->use();
 
-	// Bind the cube map
-	glActiveTexture(GL_TEXTURE0 + dayTexture);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, dayTexture);
+	// Bind the cube map (Had to hard code the texture + values as else it would not set them correctly) :/
+	glActiveTexture(GL_TEXTURE0 + 6);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, texture1);
 
-	glActiveTexture(GL_TEXTURE0 + nightTexture);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, nightTexture);
+	glActiveTexture(GL_TEXTURE0 + 7);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, texture2);
 
 	//bindTextures(shader, deltaTime);
 

@@ -36,7 +36,7 @@ private:
 
 	float time = 0;
 
-	float blendFactor = 0.67434235f;
+	//float blendFactor = 0.67434235f;
 
 	vector<float> VERTICES = {
 		-SIZE,  SIZE, -SIZE,
