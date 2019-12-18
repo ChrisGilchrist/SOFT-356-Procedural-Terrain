@@ -116,10 +116,6 @@ Terrain::~Terrain()
 	glDeleteBuffers(1, &this->textureBuffer);
 	glDeleteBuffers(1, &this->EBO);
 
-	// clear the arrays of information
-	//delete[] this->vertexArray;
-	//delete[] this->indexArray;
-
 	vertices.clear();
 	normals.clear();
 	textureCoords.clear();
@@ -131,9 +127,6 @@ void Terrain::generateTerrain(std::vector<float> &vertices, std::vector<float> &
 
 	// Create terrainGenerator
 	HeightsGenerator heightsGenerator = HeightsGenerator();
-
-	// Load in the height map
-	//stb::image image{ "heightMap/heightmap.png", 4 };
 	
 	heights.resize(VERTEX_COUNT);
 	for (auto& h : heights) h.resize(VERTEX_COUNT);
@@ -239,7 +232,6 @@ float Terrain::getHeightOfTerrain(float worldX, float worldZ) {
 		);
 	}
 
-	// Maybe add a little offset as for some reason it is slightly off
 	return answer;
 }
 

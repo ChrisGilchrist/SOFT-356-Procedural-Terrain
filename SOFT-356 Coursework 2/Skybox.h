@@ -12,6 +12,7 @@ private:
 	unsigned int dayTexture;
 	unsigned int nightTexture;
 
+	// The faces during the daytime
 	vector<std::string> dayFaces
 	{
 		"skybox/right.png",
@@ -22,6 +23,7 @@ private:
 		"skybox/front.png"
 	};
 
+	// The faces during the night time
 	vector<std::string> nightFaces
 	{
 		"skybox/nightRight.png",
@@ -33,12 +35,10 @@ private:
 	};
 
 	float SIZE = 300.0f;
-
 	float time = 0;
 
-	//float blendFactor = 0.67434235f;
-
-	vector<float> VERTICES = {
+	vector<float> VERTICES = 
+	{
 		-SIZE,  SIZE, -SIZE,
 		-SIZE, -SIZE, -SIZE,
 		SIZE, -SIZE, -SIZE,
@@ -100,7 +100,6 @@ public:
 	unsigned int loadCubemap(vector<std::string> faces);
 
 	void bindTextures(Shader* shader, float deltaTime);
-
 
 	// Render the mesh to the scene
 	void render(Shader* shader, float deltaTime);

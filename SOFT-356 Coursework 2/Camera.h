@@ -4,8 +4,6 @@
 
 #include "Model.h"
 
-enum direction { FORWARD, BACKWARD, LEFT, RIGHT, UP, DOWN };
-
 class Camera
 {
 private:
@@ -60,7 +58,6 @@ public:
 	void calculateAngleAroundPlayer(const float& dt, const double& offsetX);
 
 	void resetCameraView();
-
 
 
 	// Update position vector - Move camera in the direction provided

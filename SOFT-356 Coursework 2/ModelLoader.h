@@ -99,9 +99,8 @@ private:
 
 	// Useful
 	int textureCount = -1;
-	bool clearScene = false;
-	string choice;
 	int selectedModel = 0;
+	bool creativeMode = false;
 
 	HWND hwnd;
 
@@ -127,11 +126,10 @@ private:
 	void initWorldModels();
 
 	// Load Player Model
-	bool initPlayer(string choiceName);
+	void initPlayer();
 
 	void initLights();
 	void initUniforms();
-
 	void updateUniforms();
 
 
@@ -158,13 +156,10 @@ public:
 	void updateInput();
 	void update();
 	void clearModelInfo();
-	void ClearScene();
-	void LoadNewObj();
 	void render();
 
-	// Model Loader Related Controls
+	// Start Screen
 	void displayMenu();
-	string getInput();
 
 	//Static functions
 	static void framebuffer_resize_callback(GLFWwindow* window, int fbW, int fbH);

@@ -16,9 +16,7 @@ vec3 MousePicker::getCurrentTerrainPoint() {
 
 void MousePicker::update(GLFWwindow* window) {
 
-	// Create new view matrix
-	//glm::mat4 view_matrix{};
-
+	// Get the view matrix from the camera
 	viewMatrix = camera.getViewMatrix();
 
 	currentRay = calculateMouseRay(window);
@@ -32,7 +30,6 @@ void MousePicker::update(GLFWwindow* window) {
 }
 
 vec3 MousePicker::calculateMouseRay(GLFWwindow* window) {
-
 	double mouseX;
 	double mouseY;
 	// Get location of mouse (X and Y)
@@ -47,17 +44,15 @@ vec3 MousePicker::calculateMouseRay(GLFWwindow* window) {
 }
 
 vec3 MousePicker::toWorldCoords(vec4 eyeCoords) {
-
 	mat4 invertedView = inverse(viewMatrix);
 	vec4 rayWorld = invertedView * eyeCoords;
 	vec3 mouseRay = vec3(rayWorld.x, rayWorld.y, rayWorld.z);
 	mouseRay = glm::normalize(mouseRay);
 	return mouseRay;
-
 }
 
 vec4 MousePicker::toEyeCoords(vec4 clipCoords) {
-	glm::vec4 eyeCoords = glm::inverse(projectionMatrix) * clipCoords;
+	vec4 eyeCoords = glm::inverse(projectionMatrix) * clipCoords;
 	return { eyeCoords.x, eyeCoords.y, -1.0f, 0.0f };
 }
 
@@ -89,10 +84,7 @@ void MousePicker::setTerrain(Terrain* terrain) {
 }
 
 
-
-/* Terrain stuff, works out where we hit the terrain with the mouse (terrain position) */
-
-
+/* ---- Terrain coords stuff, works out where we hit the terrain with the mouse (terrain coordinates) ----- */
 vec3 MousePicker::getPointOnRay(vec3 ray, float distance) {
 	vec3 camPos = camera.getPosition();
 	vec3 start = vec3(camPos.x, camPos.y, camPos.z);

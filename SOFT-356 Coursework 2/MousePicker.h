@@ -23,8 +23,8 @@ private:
 	Terrain* terrain;
 	vec3 currentTerrainPoint;
 
-	float screenWidth = 1920;
-	float screenHeight = 1080;
+	float screenWidth;
+	float screenHeight;
 
 
 public:
@@ -54,7 +54,7 @@ public:
 
 
 
-	// Terrain stuff
+	// Terrain coords stuff
 	vec3 getPointOnRay(vec3 ray, float distance);
 
 	vec3 binarySearch(int count, float star, float finish, vec3 ray);

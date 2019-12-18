@@ -51,7 +51,7 @@ float Camera::getYaw() {
 
 void Camera::calculateCameraPosition(float horDistance, float vertDistance) {
 	
-	//calc
+	//calc the position of the camera (using player's position)
 	float theta = this->model->getRotationY() + angleAroundPlayer;
 	float offsetX = (float)(horDistance * sin(radians(theta)));
 	float offsetZ = (float)(horDistance * cos(radians(theta)));
@@ -79,30 +79,33 @@ Model* Camera::getModel() {
 	return this->model;
 }
 
-// Move up and down
+// Move camera up and down
 void Camera::calculatePitch(const float& dt, const double& offsetY) {
 	float pitchChange = static_cast<GLfloat>(offsetY) * 0.1;
 	pitch -= pitchChange;
 }
 
-// Move left and right
+// Move camera left and right (around the player)
 void Camera::calculateAngleAroundPlayer(const float& dt, const double& offsetX) {
 	float angleChange = static_cast<GLfloat>(offsetX) * 0.3;
 	angleAroundPlayer -= angleChange;
 }
 
 
-// Reset Camera
+// Reset the view of the Camera
 void Camera::resetCameraView() {
 	angleAroundPlayer = 0;
 	pitch = 20;
 }
 
+// Move the camera
 void Camera::move()
 {
+	// Calculate position each time
 	float horDistance = calculateHorizontalDistance();
 	float vertDistance = calculateVerticalDistance();
 	calculateCameraPosition(horDistance, vertDistance);
 
+	// Rotate camera so we are always facing the player
 	yaw = 180 - (model->getRotationY() + angleAroundPlayer);
 }

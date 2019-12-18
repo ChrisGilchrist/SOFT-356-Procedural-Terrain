@@ -28,7 +28,6 @@ private:
 
 	std::vector<std::vector<float>> heights;
 
-	//int nrOfVertices;
 	unsigned int nrOfIndices;
 
 	float x;
@@ -37,7 +36,6 @@ private:
 	Vertex* vertexArray;
 	unsigned int nrOfVertices;
 	GLuint* indexArray;
-	//unsigned nrOfIndices;
 
 	GLuint VAO;
 	GLuint vertexBuffer;
@@ -75,7 +73,6 @@ public:
 		vec3 origin,
 		vec3 rotation,
 		vec3 scale
-		//Texture texture
 	);
 
 	~Terrain();
@@ -93,12 +90,8 @@ public:
 
 	float getZ();
 
-	//Texture getTexture();
-
-
-	// Render the mesh to the scene
+	// Render the terrain to the scene
 	void render(Shader* shader);
-
 
 	// Math functions
 	float barrycentric(const glm::vec3& p1, const glm::vec3& p2,

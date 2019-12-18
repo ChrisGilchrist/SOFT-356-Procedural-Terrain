@@ -34,7 +34,6 @@ void Skybox::initVAO() {
 		nullptr
 	);
 	
-
 	//BIND VAO 0
 	glBindVertexArray(0);
 }
@@ -160,8 +159,6 @@ void Skybox::render(Shader* shader, float deltaTime) {
 
 	glActiveTexture(GL_TEXTURE0 + 7);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, texture2);
-
-	//bindTextures(shader, deltaTime);
 
 	// Draw it
 	glDrawArrays(GL_TRIANGLES, 0, 36);

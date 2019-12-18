@@ -68,17 +68,14 @@ void ModelLoader::initOpenGLOptions()
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // <!--- This shows the model in a wireframe view
 
-	//Input -- Disable this so they can see mouse and use mouse picker (TEMP)
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//Input -- Disable this so they can see mouse and use mouse picker
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 void ModelLoader::initMatrices()
 {
 	this->ViewMatrix = glm::mat4(1.f);
 	this->ViewMatrix = glm::lookAt(this->camPosition, this->camPosition + this->camFront, this->worldUp);
-
-	// Set the picker view matrix
-	//this->mousePicker.setViewMatrix(ViewMatrix);
 
 	// Deals with the resize of the screen
 	this->ProjectionMatrix = glm::mat4(1.f);
@@ -116,7 +113,7 @@ void ModelLoader::initSkybox()
 {
 	skybox = new Skybox();
 
-	cout << "Skybox is ready \n";
+	//cout << "Skybox is ready \n";
 }
 
 void ModelLoader::initTerrain()
@@ -133,8 +130,6 @@ void ModelLoader::initTerrain()
 
 	// Pass this to the mouse picker for use later
 	mousePicker.setTerrain(terrain);
-
-	cout << "Terrain is ready \n";
 }
 
 void ModelLoader::initWorldModels() {
@@ -143,13 +138,21 @@ void ModelLoader::initWorldModels() {
 
 
 	// Render in the lamps (20 of them)
-	for (int i = 0; i < 40; i++) {
+	for (int i = 0; i < 60; i++) {
 
 		// Init array of meshes
 		Mesh* mesh;
 
-		fileLoadedCorrectly = modelParser.processObjFile("models/lamp.obj", mesh, materialFileName);
-		fileLoadedCorrectly = modelParser.processMtlFile("models/" + materialFileName, textures, materials, textureCount);
+		if (i < 20) {
+			fileLoadedCorrectly = modelParser.processObjFile("models/lamp.obj", mesh, materialFileName);
+			fileLoadedCorrectly = modelParser.processMtlFile("models/" + materialFileName, textures, materials, textureCount);
+		}
+		else
+		{
+			fileLoadedCorrectly = modelParser.processObjFile("models/tree.obj", mesh, materialFileName);
+			fileLoadedCorrectly = modelParser.processMtlFile("models/" + materialFileName, textures, materials, textureCount);
+		}
+		
 
 		// Now take all the materials and meshes to load in a object.
 		modelParser.createObject(mesh, textures, materials, models);
@@ -158,40 +161,42 @@ void ModelLoader::initWorldModels() {
 		float xPosition = rand() % 1600 + 1;
 		float zPosition = rand() % 1600 + 1;
 
+		// Set the scale of the trees so they are a bit bigger
+		if (i > 20) {
+			models[i]->scale(vec3(10.0));
+		}
+
 		float height = terrain->getHeightOfTerrain(xPosition, zPosition);
 		vec3 position(xPosition, height, zPosition);
 		models[i]->setPositionX(position.x);
 		models[i]->setPositionY(position.y);
 		models[i]->setPositionZ(position.z);
 
-		cout << i << " Model is ready! \n";
-
 		delete mesh;
 	}
+
 	
 }
 
-bool ModelLoader::initPlayer(string choiceName)
+void ModelLoader::initPlayer()
 {
+	string choiceName = "models/creeper.dae";
 	bool fileLoadedCorrectly = false;
 
 	// Init array of meshes
 	Mesh* mesh;
 
-	fileLoadedCorrectly = modelParser.processColladaFile("models/" + choiceName, mesh, textures, materials, textureCount);
+	fileLoadedCorrectly = modelParser.processColladaFile(choiceName, mesh, textures, materials, textureCount);
 
 	// Now take all the materials and meshes to load in a object.
 	modelParser.createObject(mesh, textures, materials, models);
-
-	cout << "Model is ready! \n";
+	
 
 	// Clear the mesh once done with it
 	delete mesh;
 
 	// Once this is done, tell the camera that is the model to follow
 	this->camera.setModel(models[0]);
-
-	return fileLoadedCorrectly;
 }
 
 void ModelLoader::initLights()
@@ -333,14 +338,7 @@ ModelLoader::ModelLoader(
 
 	this->initSkybox();
 
-	fileLoaded = this->initPlayer("creeper.dae");
-	fileLoaded = true;
-	// If it is not true then we ask for them to choose another file
-	if (!fileLoaded)
-	{
-		ClearScene();
-		LoadNewObj();
-	}
+	this->initPlayer();
 
 	// Create the other models
 	this->initWorldModels();
@@ -437,17 +435,21 @@ void ModelLoader::updateKeyboardInput(float delta)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
-
-	/*
-	if (glfwGetKey(this->window, GLFW_KEY_K) == GLFW_PRESS)
+	if (glfwGetKey(this->window, GLFW_KEY_M) == GLFW_PRESS)
 	{
-		ClearScene();
+		if (creativeMode)
+		{
+			//Input -- Disable this so they can't see mouse and can't use mouse picker
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			creativeMode = false;
+		}
+		else
+		{
+			//Input -- Enable this so they can see mouse and use mouse picker
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			creativeMode = true;
+		}
 	}
-	if (glfwGetKey(this->window, GLFW_KEY_L) == GLFW_PRESS)
-	{
-		LoadNewObj();
-	}
-	*/
 
 
 	// Movevement Controls
@@ -486,7 +488,6 @@ void ModelLoader::updateKeyboardInput(float delta)
 		this->camera.calculateAngleAroundPlayer(dt, mouseOffsetX);
 	}
 
-
 	
 	// Player Controls
 
@@ -497,48 +498,6 @@ void ModelLoader::updateKeyboardInput(float delta)
 		this->camera.resetCameraView();
 	}
 
-
-	/* Scale up
-	if (glfwGetKey(this->window, GLFW_KEY_B) == GLFW_PRESS)
-	{
-		models[selectedModel]->scale(vec3(0.001f));
-	}
-
-	// Scale Down
-	if (glfwGetKey(this->window, GLFW_KEY_N) == GLFW_PRESS)
-	{
-		models[selectedModel]->scale(vec3(-0.001f));
-	}
-
-	// Rotate Model left
-	if (glfwGetKey(this->window, GLFW_KEY_Q) == GLFW_PRESS)
-	{
-		models[selectedModel]->rotate(vec3(0, 0.5f, 0));
-	}
-
-	// Rotate Model right
-	if (glfwGetKey(this->window, GLFW_KEY_E) == GLFW_PRESS)
-	{
-		models[selectedModel]->rotate(vec3(0, -0.5f, 0));
-	}
-
-	// Change selected model - Switches the next model in the list
-	if (glfwGetKey(this->window, GLFW_KEY_M) == GLFW_PRESS)
-	{
-		int size = models.size();
-
-		// If the selected model isn't the same as the size
-		if (selectedModel != size - 1) {
-			selectedModel += 1;
-		}
-		else
-		{
-			// Set it back to 0
-			selectedModel = 0;
-		}
-	}
-
-	*/
 }
 
 void ModelLoader::updateInput()
@@ -548,25 +507,20 @@ void ModelLoader::updateInput()
 	this->updateKeyboardInput(dt);
 	this->updateMouseInput();
 
-	/*
-	if (glfwGetKey(this->window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-	{
-
-	}
-	*/
-
 	this->camera.move();
 
 	// Lets use the Mouse Picker
 	this->mousePicker.update(window);
-	vec3 point = mousePicker.getCurrentTerrainPoint();
-	//vec3 point = mousePicker.getCurrentRay();
-	//cout << point.x << ',' << point.y << ',' << point.z <<'\n';
 
-	// Lets set the position of the lamp #1 which is models(1) in the array
-	models[1]->setPositionX(point.x);
-	models[1]->setPositionY(point.y);
-	models[1]->setPositionZ(point.z);
+	if (creativeMode) {
+		vec3 point = mousePicker.getCurrentTerrainPoint();
+
+		// Lets set the position of the lamp #1 which is models(1) in the array
+		models[1]->setPositionX(point.x);
+		models[1]->setPositionY(point.y);
+		models[1]->setPositionZ(point.z);
+	}
+	
 	
 }
 
@@ -591,49 +545,12 @@ void ModelLoader::clearModelInfo()
 	textureCount = -1;
 }
 
-void ModelLoader::ClearScene()
-{
-	// Make sure to reset the selected Model
-	selectedModel = 0;
-	
-	clearModelInfo();
-
-	// Tell the renderer not to do anything until this is false
-	this->clearScene = true;
-}
-
-void ModelLoader::LoadNewObj()
-{
-	bool fileCorrect = false;	
-
-	// Bring the console to the front so they can choose from the list
-	//ShowWindow(hwnd, SW_NORMAL);
-	SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0, SWP_SHOWWINDOW | SWP_NOSIZE | SWP_NOMOVE);
-	SetForegroundWindow(hwnd);
-
-	// Ask the user for a new model
-	cout << "\n";
-	cout << "Please enter the name of the file to load:\n";
-	choice = getInput();
-
-	this->clearScene = false;
-
-	fileCorrect = this->initPlayer(choice);
-
-	if (!fileCorrect)
-	{
-		// try again
-		LoadNewObj();
-	}
-}
-
 
 void ModelLoader::render()
 {
 
 	//DRAW ---
 	//Clear
-	//glClearColor(0.3f, 0.3f, 0.3f, 1);
 	glClearColor(0.4f, 0.3f, 0.6f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -646,15 +563,13 @@ void ModelLoader::render()
 	// Render Skybox
 	this->skybox->render(this->shaders[SHADER_SKYBOX_PROGRAM], dt);
 
-	// Render lamp - stays in same regardless
+	// Render sun
 	this->light->render(this->shaders[SHADER_LIGHT_PROGRAM]);
 
-	// If clear scene is true then dont render the objects to scene
-	if (!clearScene) {
-		//Render models
-		for (auto& i : this->models)
-			i->render(this->shaders[SHADER_CORE_PROGRAM], this->textures);
-	}
+	// Render Player and all other Models
+	for (auto& i : this->models)
+		i->render(this->shaders[SHADER_CORE_PROGRAM], this->textures);
+
 
 	//End Draw
 	glfwSwapBuffers(window);
@@ -677,32 +592,18 @@ void ModelLoader::displayMenu()
 	cout << "#######################################\n";
 	cout << "\n";
 	cout << "Game controls:\n";
-	cout << "Move mouse to control the camera view\n";
-	cout << "Press (W, A, S, D) to move camera around\n";
-	cout << "Press (SPACE) to fly up\n";
-	cout << "Press (C) to fly down\n";
-	cout << "Press (Q) to rotate model left\n";
-	cout << "Press (E) to rotate model right\n";
-	cout << "Press (B) to increase scale\n";
-	cout << "Press (N) to decrease scale\n";
+	cout << "Press (W, A, S, D) to move player around\n";
+	cout << "Press and Hold (Left mouse button) to move camera up and down\n";
+	cout << "Press and Hold (Right mouse button) to move camera left and right\n";
+	cout << "Press (SPACE) to jump up and down\n";
+	cout << "Press (R) to reset player's camera view\n";
+
 	cout << "\n";
 	cout << "Program controls:\n";
 	cout << "Press (Q or ESC) to quit\n";
-	cout << "Press (K) to clear scene\n";
-	cout << "Press (L) to load new Object in\n";
-	cout << "Press (M) to toggle between the objects in the scene (Individual Control)\n";
-	cout << "\n";
-	cout << "Please enter the name of the file to load:\n";
+	cout << "Press and hold (L) to change to line mode\n";
+	cout << "Press (M) to toggle mouse picker mode (creative mode)\n";
 
-}
-
-// Gets the name of the file that the user inputs
-string ModelLoader::getInput()
-{
-	string choice;
-	getline(cin, choice);
-	cout << "Loading " << choice << "... \n";
-	return choice;
 }
 
 //Static functions
