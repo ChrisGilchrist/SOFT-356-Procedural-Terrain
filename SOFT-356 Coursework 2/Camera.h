@@ -59,6 +59,8 @@ public:
 
 	void calculateAngleAroundPlayer(const float& dt, const double& offsetX);
 
+	void resetCameraView();
+
 
 
 	// Update position vector - Move camera in the direction provided

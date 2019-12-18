@@ -201,7 +201,7 @@ float Terrain::getHeightOfTerrain(float worldX, float worldZ) {
 	float terrainX = worldX - x;
 	float terrainZ = worldZ - z;
 
-	float gridSquareSize = SIZE / ((float)heights.size() / 1);
+	float gridSquareSize = SIZE / ((float)heights.size() - 1);
 
 	int gridX = (int)floor(terrainX / gridSquareSize);
 	int gridZ = (int)floor(terrainZ / gridSquareSize);
@@ -221,21 +221,25 @@ float Terrain::getHeightOfTerrain(float worldX, float worldZ) {
 
 
 	if (xCoord <= (1 - zCoord)) {
-		answer = barrycentric(
+		answer = barrycentric
+		(
 			glm::vec3{ 0, heights[gridX][gridZ], 0 },
 			glm::vec3{ 1, heights[gridX + 1][gridZ], 0 },
 			glm::vec3{ 0, heights[gridX][gridZ + 1], 1 },
-			glm::vec2{ xCoord, zCoord });
+			glm::vec2{ xCoord, zCoord }
+		);
 	}
 	else {
-		answer = barrycentric(
-			glm::vec3{ 0, heights[gridX + 1][gridZ], 0 },
+		answer = barrycentric
+		(
+			glm::vec3{ 1, heights[gridX + 1][gridZ], 0 },
 			glm::vec3{ 1, heights[gridX + 1][gridZ + 1], 1 },
 			glm::vec3{ 0, heights[gridX][gridZ + 1], 1 },
-			glm::vec2{ xCoord, zCoord });
+			glm::vec2{ xCoord, zCoord }
+		);
 	}
 
-	// Maybe add a little offset as for some reason it is slightly off//
+	// Maybe add a little offset as for some reason it is slightly off
 	return answer;
 }
 

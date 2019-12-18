@@ -61,12 +61,12 @@ void Camera::calculateCameraPosition(float horDistance, float vertDistance) {
 
 }
 
-float  Camera::calculateHorizontalDistance() {
+float Camera::calculateHorizontalDistance() {
 	return (float) (distanceFromPlayer * cos(radians(pitch)));
 	return distanceFromPlayer;
 }
 
-float  Camera::calculateVerticalDistance() {
+float Camera::calculateVerticalDistance() {
 	return (float) (distanceFromPlayer * sin(radians(pitch)));
 	return distanceFromPlayer;
 }
@@ -91,6 +91,12 @@ void Camera::calculateAngleAroundPlayer(const float& dt, const double& offsetX) 
 	angleAroundPlayer -= angleChange;
 }
 
+
+// Reset Camera
+void Camera::resetCameraView() {
+	angleAroundPlayer = 0;
+	pitch = 20;
+}
 
 void Camera::move()
 {

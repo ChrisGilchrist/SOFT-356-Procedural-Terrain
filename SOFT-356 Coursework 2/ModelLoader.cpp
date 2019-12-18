@@ -65,8 +65,8 @@ void ModelLoader::initOpenGLOptions()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // <!--- This shows the model in a wireframe view
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // <!--- This shows the model in a wireframe view
 
 	//Input -- Disable this so they can see mouse and use mouse picker (TEMP)
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -141,8 +141,9 @@ void ModelLoader::initWorldModels() {
 	bool fileLoadedCorrectly = false;
 	string materialFileName = "";
 
-	// Do this process 10 times for 10 lamps
-	for (int i = 0; i < 20; i++) {
+
+	// Render in the lamps (20 of them)
+	for (int i = 0; i < 40; i++) {
 
 		// Init array of meshes
 		Mesh* mesh;
@@ -153,25 +154,19 @@ void ModelLoader::initWorldModels() {
 		// Now take all the materials and meshes to load in a object.
 		modelParser.createObject(mesh, textures, materials, models);
 
-		cout << i + " Model is ready! \n";
-
-		delete mesh;
-	}
-	
-
-	// Starting from 1 onwards (because 0 will be the player model in models array)
-	for (int j = 1; j < models.size(); j++) {
-
 		// Generate random num between 1 and 40
-		float xPosition = rand() % 500 + 1;
-		float zPosition = rand() % 500 + 1;
+		float xPosition = rand() % 1600 + 1;
+		float zPosition = rand() % 1600 + 1;
 
-		// Set the lamp position to a random location on grid
 		float height = terrain->getHeightOfTerrain(xPosition, zPosition);
 		vec3 position(xPosition, height, zPosition);
-		models[j]->setPositionX(position.x);
-		models[j]->setPositionY(position.y);
-		models[j]->setPositionZ(position.z);
+		models[i]->setPositionX(position.x);
+		models[i]->setPositionY(position.y);
+		models[i]->setPositionZ(position.z);
+
+		cout << i << " Model is ready! \n";
+
+		delete mesh;
 	}
 	
 }
@@ -258,15 +253,15 @@ void ModelLoader::updateUniforms()
 	this->shaders[SHADER_TERRAIN_PROGRAM]->setMat4fv(this->ViewMatrix, "ViewMatrix");
 	this->shaders[SHADER_TERRAIN_PROGRAM]->setVec3f(this->camera.getPosition(), "cameraPos");
 	
-	// We need to remove the last column of values
+	// We need to remove the last column of values for this matrix so it doesn't move with user
 	auto matrix = this->ViewMatrix;
 	matrix[3] = glm::vec4{ 0.0, 0.0, 0.0, matrix[3][3] };
 
-	// We want to add rotation to the view matrix
+	// We want to add rotation to the view matrix (day / night)
 	currentRotation += ROTATE_SPEED * dt;
-	//glm::rotate(radians(currentRotation), vec4(0, 1, 0, 0), ViewMatrix, ViewMatrix);
 	matrix = rotate(matrix, radians(currentRotation), vec3(0, 1, 0));
 
+	// Send it to skybox shader
 	this->shaders[SHADER_SKYBOX_PROGRAM]->setMat4fv(matrix, "ViewMatrix");
 	
 
@@ -301,7 +296,6 @@ ModelLoader::ModelLoader(
 	GL_VERSION_MINOR(GL_VERSION_MINOR),
 	camera(glm::vec3(0.f, 1.f, 0.f), glm::vec3(0.f, 10.f, 1.f), glm::vec3(0.f, 1.f, 0.f)),
 	mousePicker(camera)
-	//camera(glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 1.f, 0.f))
 {
 	bool fileLoaded = false;
 
@@ -435,6 +429,19 @@ void ModelLoader::updateKeyboardInput(float delta)
 	{
 		glfwSetWindowShouldClose(this->window, GL_TRUE);
 	}
+
+	if (glfwGetKey(this->window, GLFW_KEY_L) == GLFW_PRESS)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+
+	if (glfwGetKey(this->window, GLFW_KEY_L) == GLFW_RELEASE)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+
+
+	/*
 	if (glfwGetKey(this->window, GLFW_KEY_K) == GLFW_PRESS)
 	{
 		ClearScene();
@@ -443,25 +450,26 @@ void ModelLoader::updateKeyboardInput(float delta)
 	{
 		LoadNewObj();
 	}
+	*/
 
 
-	// Move Player
-	if (glfwGetKey(this->window, GLFW_KEY_UP) == GLFW_PRESS)
+	// Movevement Controls
+	if (glfwGetKey(this->window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		models[selectedModel]->move("FORWARD", dt, terrain);
 	}
 
-	if (glfwGetKey(this->window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	if (glfwGetKey(this->window, GLFW_KEY_S) == GLFW_PRESS)
 	{
 		models[selectedModel]->move("BACKWARDS", dt, terrain);
 	}
 
-	if (glfwGetKey(this->window, GLFW_KEY_LEFT) == GLFW_PRESS)
+	if (glfwGetKey(this->window, GLFW_KEY_A) == GLFW_PRESS)
 	{
 		models[selectedModel]->move("TURN_LEFT", dt, terrain);
 	}
 
-	if (glfwGetKey(this->window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+	if (glfwGetKey(this->window, GLFW_KEY_D) == GLFW_PRESS)
 	{
 		models[selectedModel]->move("TURN_RIGHT", dt, terrain);
 	}
@@ -470,7 +478,6 @@ void ModelLoader::updateKeyboardInput(float delta)
 	{
 		models[selectedModel]->move("JUMP", dt, terrain);
 	}
-
 
 	if (glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 	{
@@ -481,6 +488,18 @@ void ModelLoader::updateKeyboardInput(float delta)
 	{
 		this->camera.calculateAngleAroundPlayer(dt, mouseOffsetX);
 	}
+
+
+	
+	// Player Controls
+
+	// Rotate camera back to normal
+	if (glfwGetKey(this->window, GLFW_KEY_R) == GLFW_PRESS)
+	{
+
+		this->camera.resetCameraView();
+	}
+
 
 	/* Scale up
 	if (glfwGetKey(this->window, GLFW_KEY_B) == GLFW_PRESS)

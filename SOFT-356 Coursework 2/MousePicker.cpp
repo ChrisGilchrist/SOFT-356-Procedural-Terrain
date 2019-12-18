@@ -73,10 +73,10 @@ vec2 MousePicker::getNormalisedDeviceCoord(float mouseX, float mouseY, GLFWwindo
 	screenHeight = *height;
 
 	float x = (2.f * mouseX) / screenWidth - 1.f;
-	//float y = (2.f * mouseY) / screenHeight - 1.f;
-	float y = 1.0f - (2.0f * mouseY) / screenHeight;
+	float y = (2.f * mouseY) / screenHeight - 1.f;
+	//float y = 1.0f - (2.0f * mouseY) / screenHeight;
 	//float y = (mouseY * screenHeight / 2) / screenHeight * 2.f;
-	return vec2(x, y);
+	return vec2(x, -y);
 }
 
 
