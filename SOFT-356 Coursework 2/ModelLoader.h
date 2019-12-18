@@ -88,13 +88,13 @@ private:
 	//Skybox
 	Skybox* skybox;
 
-	//Terrains 
+	//Terrain
 	Terrain* terrain;
 
 	//Models
 	vector<Model*> models;
 
-	//Light
+	//Light (Sun)
 	Light* light;
 
 	// Useful

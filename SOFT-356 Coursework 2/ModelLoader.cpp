@@ -90,7 +90,7 @@ void ModelLoader::initMatrices()
 	);
 
 	// Set the picker Projection matrix
-	this->mousePicker.setPorjection(ProjectionMatrix);
+	this->mousePicker.setProjection(ProjectionMatrix);
 }
 
 void ModelLoader::initShaders()
@@ -196,14 +196,11 @@ bool ModelLoader::initPlayer(string choiceName)
 
 void ModelLoader::initLights()
 {
-	// Create light used to illuminate the object
+	// Create light used to illuminate the object (The sun in the scene)
 	light = new Light(
-		//vec3(10.f, 5.f, -1.f), // Closer to models
-		//vec3(20.f, 10.f, -1.f),
 		vec3(200.f, 500.f, 600.f),
 		vec3(0.f),
 		vec3(0, 0, 0),
-		//vec3(0.5f),
 		vec3(30.f),
 		vec3(0.8f, 0.8f, 0.8f),
 		vec3(0.8f, 0.8f, 0.8f),

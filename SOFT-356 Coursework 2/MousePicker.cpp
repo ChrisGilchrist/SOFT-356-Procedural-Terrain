@@ -33,12 +33,10 @@ void MousePicker::update(GLFWwindow* window) {
 
 vec3 MousePicker::calculateMouseRay(GLFWwindow* window) {
 
-	// Get Mouse X / Y location
-	POINT mouse;
-	GetCursorPos(&mouse);
-
-	float mouseX = mouse.x;
-	float mouseY = mouse.y;
+	double mouseX;
+	double mouseY;
+	// Get location of mouse (X and Y)
+	glfwGetCursorPos(window, &mouseX, &mouseY);
 
 	vec2 normalisedCoords = getNormalisedDeviceCoord(mouseX, mouseY, window);
 	vec4 clipCoords = vec4(normalisedCoords.x, normalisedCoords.y, -1.f, 1.f);
@@ -74,13 +72,11 @@ vec2 MousePicker::getNormalisedDeviceCoord(float mouseX, float mouseY, GLFWwindo
 
 	float x = (2.f * mouseX) / screenWidth - 1.f;
 	float y = (2.f * mouseY) / screenHeight - 1.f;
-	//float y = 1.0f - (2.0f * mouseY) / screenHeight;
-	//float y = (mouseY * screenHeight / 2) / screenHeight * 2.f;
 	return vec2(x, -y);
 }
 
 
-void MousePicker::setPorjection(mat4& projection) {
+void MousePicker::setProjection(mat4& projection) {
 	this->projectionMatrix = projection;
 }
 
@@ -103,8 +99,6 @@ vec3 MousePicker::getPointOnRay(vec3 ray, float distance) {
 	vec3 scaledRay = vec3(ray.x * distance, ray.y * distance, ray.z * distance);
 
 	vec3 result = vec3(start + scaledRay);
-
-	//return vec3.add(start, scaledRay, null);
 
 	return result;
 }

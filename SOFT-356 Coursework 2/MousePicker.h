@@ -12,7 +12,7 @@ class MousePicker
 private:
 
 	int RECURSION_COUNT = 200;
-	float RAY_RANGE = 600;
+	float RAY_RANGE = 800;
 
 	vec3 currentRay;
 
@@ -23,13 +23,8 @@ private:
 	Terrain* terrain;
 	vec3 currentTerrainPoint;
 
-	//  Testing something
-
-
 	float screenWidth = 1920;
 	float screenHeight = 1080;
-
-	HWND handleToCalculatorWindow; // Handle to window declared here!
 
 
 public:
@@ -51,7 +46,7 @@ public:
 	vec2 getNormalisedDeviceCoord(float mouseX, float mouseY, GLFWwindow* window);
 
 
-	void setPorjection(mat4& projection);
+	void setProjection(mat4& projection);
 
 	void setViewMatrix(mat4& view);
 
