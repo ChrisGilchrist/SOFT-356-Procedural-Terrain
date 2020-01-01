@@ -28,6 +28,9 @@ I also used stb_image, however I could not install it using the package manager.
 -	Mouse Pointer functionality (allows user to interact with the world using the mouse)
 
 ## How use the prototype
+
+**Important** Make sure that the folders containing textures etc.. are in the same folder as the .exe file as it will look for these when rendering the scene. (Folders: shaders, textures, models, skybox, terrain)
+
 To play the prototype, you can simply run the executable file. Once the application has loaded, 
 the user can then interact with the product with the following controls:
 
