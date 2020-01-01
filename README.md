@@ -18,7 +18,7 @@ To make the process simple, I used the nuget packet manager in visual studio to 
 I also used stb_image, however I could not install it using the package manager. So instead I added the stb_image.h header file to my application.
 
 ## Project Content
--	Procedurally generated terrain
+-	Procedurally generated terrain and height map generation
 -	Terrain Collision detection
 -	3rd Person Camera
 -	Skybox with a day / night cycle
@@ -47,7 +47,7 @@ the user can then interact with the product with the following controls:
 -	Press M to toggle mouse picker mode on (creative mode)
 -	Press N to toggle mouse picker mode off (creative mode)
 
-## How do the classes nand functions fit together and who does what?
+## How do the classes and functions fit together and who does what?
 I have tried to take an OOP approach to make navigating my code as simple as possible. I have created separate classes for all parts of the code to ensure there is very little confusion. Each class has both a header file, which contains the class definitions and functions and a .cpp file which contains the implementation of the class. The main file which contains most of the functionality is the modelLoader.cpp,
 this is where all the OpenGL configuration is handled, and the classes are implemented. The main file creates a Model Loader object which initiates the game engine and then calls the render() method to display the results.
 
