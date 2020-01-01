@@ -41,7 +41,8 @@ the user can then interact with the product with the following controls:
 ### Program Controls
 -	Q or Esc to quit the application
 -	Press and hold L to change to line mode
--	Press M to toggle mouse picker mode (creative mode)
+-	Press M to toggle mouse picker mode on (creative mode)
+-	Press N to toggle mouse picker mode off (creative mode)
 
 ## How do the classes nand functions fit together and who does what?
 I have tried to take an OOP approach to make navigating my code as simple as possible. I have created separate classes for all parts of the code to ensure there is very little confusion. Each class has both a header file, which contains the class definitions and functions and a .cpp file which contains the implementation of the class. The main file which contains most of the functionality is the modelLoader.cpp,
