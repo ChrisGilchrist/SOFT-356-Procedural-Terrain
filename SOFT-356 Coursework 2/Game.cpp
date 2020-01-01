@@ -203,7 +203,7 @@ void Game::initLights()
 {
 	// Create light used to illuminate the object (The sun in the scene)
 	light = new Light(
-		vec3(200.f, 500.f, 600.f),
+		vec3(200.f, 700.f, 600.f),
 		vec3(0.f),
 		vec3(0, 0, 0),
 		vec3(30.f),
