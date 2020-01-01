@@ -1,7 +1,9 @@
 # SOFT 356 Interactive Prototype
 
 ## Video Demo
-[![Video Demo](https://github.com/ChrisGilchrist/SOFT-356-Procedural-Terrain/blob/master/SOFT-356%20Coursework%202/textures/Capture.PNG)](https://www.youtube.com/watch?v=VPQkbFIXBiE&feature=youtu.be "Video Demo")
+[![Video Demo](https://github.com/ChrisGilchrist/SOFT-356-Procedural-Terrain/blob/master/SOFT-356%20Coursework%202/textures/Capture.PNG)](https://www.youtube.com/watch?v=VPQkbFIXBiE&feature=youtu.be 
+"https://www.youtube.com/watch?v=VPQkbFIXBiE&feature=youtu.be")
+Link: https://www.youtube.com/watch?v=VPQkbFIXBiE&feature=youtu.be
 
 ## Project Aim
 The aim of the project was to create a basic game engine that focused on the PCG when constructing the world in which the 
