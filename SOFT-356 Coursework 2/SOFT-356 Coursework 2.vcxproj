@@ -131,7 +131,7 @@
     <ClInclude Include="MaterialGroup.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
-    <ClInclude Include="ModelLoader.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="MousePicker.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Skybox.h" />
@@ -151,7 +151,7 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
-    <ClCompile Include="ModelLoader.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="MousePicker.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Skybox.cpp" />

@@ -1,4 +1,4 @@
-#include "ModelLoader.h"
+#include "Game.h"
 
 using namespace std;
 using namespace glm;
@@ -9,7 +9,7 @@ struct TextureInfo {
 };
 
 //Private functions
-void ModelLoader::initGLFW()
+void Game::initGLFW()
 {
 	//INIT GLFW
 	if (!glfwInit())
@@ -19,7 +19,7 @@ void ModelLoader::initGLFW()
 	}
 }
 
-void ModelLoader::initWindow(
+void Game::initWindow(
 	const char* title,
 	bool resizable
 )
@@ -38,11 +38,11 @@ void ModelLoader::initWindow(
 	}
 
 	glfwGetFramebufferSize(this->window, &this->framebufferWidth, &this->framebufferHeight);
-	glfwSetFramebufferSizeCallback(window, ModelLoader::framebuffer_resize_callback);
+	glfwSetFramebufferSizeCallback(window, Game::framebuffer_resize_callback);
 	glfwMakeContextCurrent(this->window);	
 }
 
-void ModelLoader::initGLEW()
+void Game::initGLEW()
 {
 	//INIT GLEW (NEEDS WINDOW AND OPENGL CONTEXT)
 	glewExperimental = GL_TRUE;
@@ -55,7 +55,7 @@ void ModelLoader::initGLEW()
 	}
 }
 
-void ModelLoader::initOpenGLOptions()
+void Game::initOpenGLOptions()
 {
 	glEnable(GL_DEPTH_TEST);
 	//glEnable(GL_CULL_FACE); // TODO - Remove these, These are causing the issue with transparent parts of the model 
@@ -72,7 +72,7 @@ void ModelLoader::initOpenGLOptions()
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
-void ModelLoader::initMatrices()
+void Game::initMatrices()
 {
 	this->ViewMatrix = glm::mat4(1.f);
 	this->ViewMatrix = glm::lookAt(this->camPosition, this->camPosition + this->camFront, this->worldUp);
@@ -90,7 +90,7 @@ void ModelLoader::initMatrices()
 	this->mousePicker.setProjection(ProjectionMatrix);
 }
 
-void ModelLoader::initShaders()
+void Game::initShaders()
 {
 	// Shader files for the models
 	this->shaders.push_back(new Shader(this->GL_VERSION_MAJOR, this->GL_VERSION_MINOR,
@@ -109,14 +109,14 @@ void ModelLoader::initShaders()
 		"shaders/skybox_vertex_core.glsl", "shaders/skybox_fragment_core.glsl"));
 }
 
-void ModelLoader::initSkybox()
+void Game::initSkybox()
 {
 	skybox = new Skybox();
 
 	//cout << "Skybox is ready \n";
 }
 
-void ModelLoader::initTerrain()
+void Game::initTerrain()
 {
 	// Create new terrain
 	terrain = new Terrain(
@@ -132,7 +132,7 @@ void ModelLoader::initTerrain()
 	mousePicker.setTerrain(terrain);
 }
 
-void ModelLoader::initWorldModels() {
+void Game::initWorldModels() {
 	bool fileLoadedCorrectly = false;
 	string materialFileName = "";
 
@@ -178,7 +178,7 @@ void ModelLoader::initWorldModels() {
 	
 }
 
-void ModelLoader::initPlayer()
+void Game::initPlayer()
 {
 	string choiceName = "models/creeper.dae";
 	bool fileLoadedCorrectly = false;
@@ -199,7 +199,7 @@ void ModelLoader::initPlayer()
 	this->camera.setModel(models[0]);
 }
 
-void ModelLoader::initLights()
+void Game::initLights()
 {
 	// Create light used to illuminate the object (The sun in the scene)
 	light = new Light(
@@ -213,7 +213,7 @@ void ModelLoader::initLights()
 	);
 }
 
-void ModelLoader::initUniforms()
+void Game::initUniforms()
 {
 	//INIT UNIFORMS
 	this->shaders[SHADER_CORE_PROGRAM]->setMat4fv(ViewMatrix, "ViewMatrix");
@@ -239,7 +239,7 @@ void ModelLoader::initUniforms()
 	this->shaders[SHADER_TERRAIN_PROGRAM]->setVec3f(this->light->getSpecular(), "lightSpecular");
 }
 
-void ModelLoader::updateUniforms()
+void Game::updateUniforms()
 {
 	//Update view matrix (camera)
 	this->ViewMatrix = this->camera.getViewMatrix();
@@ -285,7 +285,7 @@ void ModelLoader::updateUniforms()
 }
 
 //Constructors / Destructors
-ModelLoader::ModelLoader(
+Game::Game(
 	const char* title,
 	const int WINDOW_WIDTH, const int WINDOW_HEIGHT,
 	const int GL_VERSION_MAJOR, const int GL_VERSION_MINOR,
@@ -352,7 +352,7 @@ ModelLoader::ModelLoader(
 	srand(time(NULL));
 }
 
-ModelLoader::~ModelLoader()
+Game::~Game()
 {
 	// Destroy the windows and all the other parts of the program
 	glfwDestroyWindow(this->window);
@@ -378,26 +378,26 @@ ModelLoader::~ModelLoader()
 }
 
 //Accessor
-int ModelLoader::getWindowShouldClose()
+int Game::getWindowShouldClose()
 {
 	return glfwWindowShouldClose(this->window);
 }
 
 //Modifier
-void ModelLoader::setWindowShouldClose()
+void Game::setWindowShouldClose()
 {
 	glfwSetWindowShouldClose(this->window, GL_TRUE);
 }
 
 //Functions
-void ModelLoader::updateDt()
+void Game::updateDt()
 {
 	this->curTime = static_cast<float>(glfwGetTime());
 	this->dt = this->curTime - this->lastTime;
 	this->lastTime = this->curTime;
 }
 
-void ModelLoader::updateMouseInput()
+void Game::updateMouseInput()
 {
 	glfwGetCursorPos(this->window, &this->mouseX, &this->mouseY);
 
@@ -417,7 +417,7 @@ void ModelLoader::updateMouseInput()
 	this->lastMouseY = this->mouseY;
 }
 
-void ModelLoader::updateKeyboardInput(float delta)
+void Game::updateKeyboardInput(float delta)
 {
 	//Program Controls
 	if (glfwGetKey(this->window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -450,7 +450,6 @@ void ModelLoader::updateKeyboardInput(float delta)
 			creativeMode = true;
 		}
 	}
-
 
 	// Movevement Controls
 	if (glfwGetKey(this->window, GLFW_KEY_W) == GLFW_PRESS)
@@ -500,7 +499,7 @@ void ModelLoader::updateKeyboardInput(float delta)
 
 }
 
-void ModelLoader::updateInput()
+void Game::updateInput()
 {
 	glfwPollEvents();
 
@@ -524,7 +523,7 @@ void ModelLoader::updateInput()
 	
 }
 
-void ModelLoader::update()
+void Game::update()
 {
 	//UPDATE INPUT ---
 	this->updateDt();
@@ -532,7 +531,7 @@ void ModelLoader::update()
 }
 
 // Cleans up the memory, remove all the info stored about the old model
-void ModelLoader::clearModelInfo()
+void Game::clearModelInfo()
 {
 	// Clear the arrays storing model info
 	textures.clear();
@@ -546,7 +545,7 @@ void ModelLoader::clearModelInfo()
 }
 
 
-void ModelLoader::render()
+void Game::render()
 {
 
 	//DRAW ---
@@ -581,33 +580,8 @@ void ModelLoader::render()
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-
-// New game related controls
-void ModelLoader::displayMenu()
-{
-	cout << "\n";
-	cout << "\n";
-	cout << "#######################################\n";
-	cout << "### WELCOME TO CHRIS'S MODEL LOADER ###\n";
-	cout << "#######################################\n";
-	cout << "\n";
-	cout << "Game controls:\n";
-	cout << "Press (W, A, S, D) to move player around\n";
-	cout << "Press and Hold (Left mouse button) to move camera up and down\n";
-	cout << "Press and Hold (Right mouse button) to move camera left and right\n";
-	cout << "Press (SPACE) to jump up and down\n";
-	cout << "Press (R) to reset player's camera view\n";
-
-	cout << "\n";
-	cout << "Program controls:\n";
-	cout << "Press (Q or ESC) to quit\n";
-	cout << "Press and hold (L) to change to line mode\n";
-	cout << "Press (M) to toggle mouse picker mode (creative mode)\n";
-
-}
-
 //Static functions
-void ModelLoader::framebuffer_resize_callback(GLFWwindow* window, int fbW, int fbH)
+void Game::framebuffer_resize_callback(GLFWwindow* window, int fbW, int fbH)
 {
 	glViewport(0, 0, fbW, fbH);
 };

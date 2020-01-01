@@ -1,9 +1,9 @@
-#include "ModelLoader.h"
+#include "Game.h"
 
 int main()
 {
 
-	ModelLoader loader("Model Loader",
+	Game loader("SOFT356 Interactive Prototype",
 		1920, 1080,
 		4, 4,
 		false);

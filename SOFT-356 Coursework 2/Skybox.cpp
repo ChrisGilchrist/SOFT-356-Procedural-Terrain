@@ -67,47 +67,6 @@ unsigned int Skybox::loadCubemap(vector<string> faces) {
 	return textureID;	
 }
 
-void Skybox::bindTextures(Shader* shader, float deltaTime) {
-
-	time += deltaTime * 1000;
-	time = fmod(time, 24000);
-	int texture1;
-	int texture2;
-	float blendFactor = 0.0f;
-
-	if (time >= 0 && time < 5000) {
-		texture1 = nightTexture;
-		texture2 = nightTexture;
-		blendFactor = (time - 0) / (5000 - 0);
-	}
-	else if (time >= 5000 && time < 8000) {
-		texture1 = dayTexture;
-		texture2 = dayTexture;
-		blendFactor = (time - 5000) / (8000 - 5000);
-	}
-	else if (time >= 8000 && time < 21000) {
-		texture1 = dayTexture;
-		texture2 = dayTexture;
-		blendFactor = (time - 8000) / (21000 - 8000);
-	}
-	else {
-		texture1 = dayTexture;
-		texture2 = nightTexture;
-		blendFactor = (time - 21000) / (24000 - 21000);
-	}
-
-	// Bind the cube map
-	glActiveTexture(GL_TEXTURE0 + texture1);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, texture1);
-
-	// Bind the cube map
-	glActiveTexture(GL_TEXTURE1 + texture2);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, texture2);
-
-	shader->set1f(blendFactor, "blendFactor");
-}
-
-
 void Skybox::render(Shader* shader, float deltaTime) {
 
 	time += deltaTime * 1000;

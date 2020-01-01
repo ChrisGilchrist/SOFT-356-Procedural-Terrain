@@ -28,7 +28,7 @@ enum shader_enum {
 	SHADER_SKYBOX_PROGRAM = 3
 };
 
-class ModelLoader
+class Game
 {
 private:
 	//Variables
@@ -135,13 +135,13 @@ private:
 
 public:
 	//Constructors / Destructors
-	ModelLoader(
+	Game(
 		const char* title,
 		const int WINDOW_WIDTH, const int WINDOW_HEIGHT,
 		const int GL_VERSION_MAJOR, const int GL_VERSION_MINOR,
 		bool resizable
 	);
-	virtual ~ModelLoader();
+	virtual ~Game();
 
 	//Accessors
 	int getWindowShouldClose();
@@ -157,9 +157,6 @@ public:
 	void update();
 	void clearModelInfo();
 	void render();
-
-	// Start Screen
-	void displayMenu();
 
 	//Static functions
 	static void framebuffer_resize_callback(GLFWwindow* window, int fbW, int fbH);

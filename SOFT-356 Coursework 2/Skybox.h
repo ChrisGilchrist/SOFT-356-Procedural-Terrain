@@ -99,8 +99,6 @@ public:
 
 	unsigned int loadCubemap(vector<std::string> faces);
 
-	void bindTextures(Shader* shader, float deltaTime);
-
 	// Render the mesh to the scene
 	void render(Shader* shader, float deltaTime);
 
