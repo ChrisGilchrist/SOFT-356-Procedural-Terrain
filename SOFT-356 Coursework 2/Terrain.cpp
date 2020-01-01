@@ -104,6 +104,7 @@ Terrain::Terrain(
 
 	// This method needs to create the array of Vertex's
 	this->generateTerrain(vertices, normals, textureCoords, indices);
+	//this->generateTerrainWithMap(vertices, normals, textureCoords, indices); <--- Used if we have a height map
 	this->initVAO();
 	this->updateModelMatrix();
 }
@@ -127,7 +128,7 @@ void Terrain::generateTerrain(std::vector<float> &vertices, std::vector<float> &
 
 	// Create terrainGenerator
 	HeightsGenerator heightsGenerator = HeightsGenerator();
-	
+
 	heights.resize(VERTEX_COUNT);
 	for (auto& h : heights) h.resize(VERTEX_COUNT);
 
@@ -173,8 +174,82 @@ void Terrain::generateTerrain(std::vector<float> &vertices, std::vector<float> &
 	}
 }
 
+void Terrain::generateTerrainWithMap(std::vector<float>& vertices, std::vector<float>& normals, vector<float>& textureCoords, vector<int>& indices) {
+
+	// Create terrainGenerator
+	HeightsGenerator heightsGenerator = HeightsGenerator();
+
+	// Change the value of size 
+	this->SIZE = 1600;
+
+	// Load in the height map
+	stb::image image{ "heightMap/heightmap.png", 4 };
+	int VERTEX_COUNT = image.height();
+
+	heights.resize(VERTEX_COUNT);
+	for (auto& h : heights) h.resize(VERTEX_COUNT);
+
+	count = VERTEX_COUNT * VERTEX_COUNT;
+	vertices.resize(count * 3);
+	normals.resize(count * 3);
+	textureCoords.resize(count * 2);
+	indices.resize(6 * (VERTEX_COUNT - 1) * (VERTEX_COUNT - 1));
+
+	int vertexPointer = 0;
+	for (int i = 0; i < VERTEX_COUNT; i++) {
+		for (int j = 0; j < VERTEX_COUNT; j++) {
+			vertices[vertexPointer * 3] = (float)j / ((float)VERTEX_COUNT - 1) * SIZE;
+
+			//float height = getHeight(j, i, heightsGenerator);
+			float height = getHeightWithMap(j, i, image);
+			heights[j][i] = height;
+			vertices[vertexPointer * 3 + 1] = height;
+			vertices[vertexPointer * 3 + 2] = (float)i / ((float)VERTEX_COUNT - 1) * SIZE;
+
+			vec3 normal = calculateNormalWithMap(j, i, image);
+			normals[vertexPointer * 3] = normal.x;
+			normals[vertexPointer * 3 + 1] = normal.y;
+			normals[vertexPointer * 3 + 2] = normal.z;
+
+			textureCoords[vertexPointer * 2] = (float)j / ((float)VERTEX_COUNT - 1);
+			textureCoords[vertexPointer * 2 + 1] = (float)i / ((float)VERTEX_COUNT - 1);
+			vertexPointer++;
+		}
+	}
+	int pointer = 0;
+	for (int gz = 0; gz < VERTEX_COUNT - 1; gz++) {
+		for (int gx = 0; gx < VERTEX_COUNT - 1; gx++) {
+			int topLeft = (gz * VERTEX_COUNT) + gx;
+			int topRight = topLeft + 1;
+			int bottomLeft = ((gz + 1) * VERTEX_COUNT) + gx;
+			int bottomRight = bottomLeft + 1;
+			indices[pointer++] = topLeft;
+			indices[pointer++] = bottomLeft;
+			indices[pointer++] = topRight;
+			indices[pointer++] = topRight;
+			indices[pointer++] = bottomLeft;
+			indices[pointer++] = bottomRight;
+		}
+	}
+}
+
 float Terrain::getHeight(int x, int z, HeightsGenerator generator) {
 	return generator.generateHeight(x, z);
+}
+
+float Terrain::getHeightWithMap(int x, int z, const stb::image& image) {
+	if (x < 0 || x > image.height() || z < 0 || z > image.height()) {
+		return 0;
+	}
+
+	uint32_t val = image.get_rgb(x, z);
+
+	double height = val;
+	height /= (MAX_PIXEL_COLOUR / 2);
+	height -= 1.0;
+	height *= MAX_HEIGHT;
+
+	return height;
 }
 
 vec3 Terrain::calculateNormal(int x, int z, HeightsGenerator generator) {
@@ -182,6 +257,18 @@ vec3 Terrain::calculateNormal(int x, int z, HeightsGenerator generator) {
 	float heightR = getHeight(x + 1, z, generator);
 	float heightD = getHeight(x, z - 1, generator);
 	float heightU = getHeight(x, z + 1, generator);
+
+	vec3 normal{ heightL - heightR, 2.0f, heightD - heightU };
+	normal = normalize(normal);
+
+	return normal;
+}
+
+vec3 Terrain::calculateNormalWithMap(int x, int z, const stb::image& image) {
+	float heightL = getHeightWithMap(x - 1, z, image);
+	float heightR = getHeightWithMap(x + 1, z, image);
+	float heightD = getHeightWithMap(x, z - 1, image);
+	float heightU = getHeightWithMap(x, z + 1, image);
 
 	vec3 normal{ heightL - heightR, 2.0f, heightD - heightU };
 	normal = normalize(normal);

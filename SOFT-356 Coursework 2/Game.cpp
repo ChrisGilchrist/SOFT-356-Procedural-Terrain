@@ -437,18 +437,21 @@ void Game::updateKeyboardInput(float delta)
 
 	if (glfwGetKey(this->window, GLFW_KEY_M) == GLFW_PRESS)
 	{
+			//Input -- Enable this so they can see mouse and use mouse picker
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			creativeMode = true;
+	
+	}
+
+	if (glfwGetKey(this->window, GLFW_KEY_N) == GLFW_PRESS)
+	{
 		if (creativeMode)
 		{
 			//Input -- Disable this so they can't see mouse and can't use mouse picker
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 			creativeMode = false;
 		}
-		else
-		{
-			//Input -- Enable this so they can see mouse and use mouse picker
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-			creativeMode = true;
-		}
+
 	}
 
 	// Movevement Controls

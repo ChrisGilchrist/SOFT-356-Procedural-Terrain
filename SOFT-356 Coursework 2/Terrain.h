@@ -20,6 +20,8 @@ private:
 	float VERTEX_COUNT = 128;
 	const float MAX_PIXEL_COLOUR = 256 * 256 * 256;
 
+	const float MAX_HEIGHT = 150; // Used if we are using a height map
+
 	int count = VERTEX_COUNT * VERTEX_COUNT;
 	vector<float> vertices = vector<float>(0);
 	vector<float> normals =vector<float>(0);
@@ -79,11 +81,17 @@ public:
 
 	void generateTerrain(std::vector<float>& vertices, std::vector<float>& normals, vector<float>& textureCoords, vector<int>& indices);
 
+	void generateTerrainWithMap(std::vector<float>& vertices, std::vector<float>& normals, vector<float>& textureCoords, vector<int>& indices);
+
 	float getHeight(int x, int z, HeightsGenerator heightsGenerator);
+
+	float getHeightWithMap(int x, int z, const stb::image& image);
 
 	float getHeightOfTerrain(float worldX, float worldY);
 
 	vec3 calculateNormal(int x, int z, HeightsGenerator heightsGenerator);
+
+	vec3 calculateNormalWithMap(int x, int z, const stb::image& image);
 
 	// Getters
 	float getX();
