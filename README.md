@@ -58,6 +58,7 @@ As a lot of the classes in the application include the same header files, I deci
 
 ### New Content that has been implemented
 The **terrain** class was created to hold all the information related to the terrain. 
+
 -	Creating the VAO’s and it’s corresponding VBOs 
 -	Generation of the terrain 
 -	Creation of textures that will be used to colour the terrain
@@ -65,20 +66,24 @@ The **terrain** class was created to hold all the information related to the ter
 -	Rendering the terrain to the scene
 
 The **mouse pointer** class handles the functionality which allows the user to interact at a specific coordinate by translating the x and y position of the mouse on the screen into x and z coordinates of the terrain. 
+
 -	Convert mouse cursor from viewport space to a 3D ray that it is in world space
 -	Conducts a binary search to find where on the terrain the ray intersects
 
 The **skybox** class which handles the creation of the skybox which encapsulates the world and controls the day / night cycle.
+
 -	Creating the VAO’s and it’s corresponding VBOs
 -	Creation of cubemap textures that are used to colour the skybox
 -	Binding specific textures to the shader depending on where in the day / night cycle we are at 
 -	Rendering the skybox to the scene
 
 The **heights generation** class offers the functionality to create a procedurally generated terrain using the Perlin noise algorithm.
+
 -	Randomly generates the height of the terrain at a specific point (x and z coordinates)
 -	Used by the terrain class, when generating the terrain to decide the height at each point. 
 
 The **camera** class handles the creation of a 3rd person camera that the user will use to see where the player is in the world and will be able to follow the player every time they move. I had to rework the exisiting camera from a free roam camera to a 3rd person.
+
 -	Creation of the camera view matrix
 -	Offers getters / setters allowing the main loop to interact with the camera
 -	Calculates the position of the camera each frame using the players position, ensuring that it is always focusing on the player. (Like in a 3rd person game)
