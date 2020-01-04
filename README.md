@@ -30,7 +30,7 @@ I also used stb_image, however I could not install it using the package manager.
 -	Multi-texturing with the use of a blend map
 -	Mouse Pointer functionality (allows user to interact with the world using the mouse)
 
-## How use the prototype
+## How to use the prototype
 
 **Important** Make sure that the folders containing textures etc.. are in the same folder as the .exe file as it will look for these when loading the project. (Folders: shaders, textures, models, skybox, terrain)
 
