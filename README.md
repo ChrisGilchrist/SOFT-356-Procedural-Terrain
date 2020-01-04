@@ -6,7 +6,7 @@
 Link: https://www.youtube.com/watch?v=VPQkbFIXBiE&feature=youtu.be
 
 ## Project Aim
-The aim of the project was to create a basic game engine that focused on the PCG when constructing the world in which the 
+The aim of the project was to create a basic game engine that focused on PCG when constructing the world in which the 
 user interacts with.
 
 ## Versions Used
@@ -22,7 +22,7 @@ I also used stb_image, however I could not install it using the package manager.
 
 ## Project Content
 -	Procedurally generated terrain and height map generation
--	Terrain Collision detection
+-	Terrain collision detection
 -	3rd Person Camera
 -	Skybox with a day / night cycle
 -	Multiple entities rendered into the scene for scenery
@@ -32,10 +32,11 @@ I also used stb_image, however I could not install it using the package manager.
 
 ## How use the prototype
 
-**Important** Make sure that the folders containing textures etc.. are in the same folder as the .exe file as it will look for these when rendering the scene. (Folders: shaders, textures, models, skybox, terrain)
+**Important** Make sure that the folders containing textures etc.. are in the same folder as the .exe file as it will look for these when loading the project. (Folders: shaders, textures, models, skybox, terrain)
 
 To play the prototype, you can simply run the executable file. Once the application has loaded, 
-the user can then interact with the product with the following controls:
+the user can then interact with the program with the following controls:
+
 
 ### Game Controls
 - Press W A S D to move player around
@@ -51,8 +52,7 @@ the user can then interact with the product with the following controls:
 -	Press N to toggle mouse picker mode off (creative mode)
 
 ## How do the classes and functions fit together and who does what?
-I have tried to take an OOP approach to make navigating my code as simple as possible. I have created separate classes for all parts of the code to ensure there is very little confusion. Each class has both a header file, which contains the class definitions and functions and a .cpp file which contains the implementation of the class. The main file which contains most of the functionality is the modelLoader.cpp,
-this is where all the OpenGL configuration is handled, and the classes are implemented. The main file creates a Model Loader object which initiates the game engine and then calls the render() method to display the results.
+I have tried to take an OOP approach to make navigating my code as simple as possible. I have created separate classes for all parts of the code to ensure there is very little confusion. Each class has both a header file, which contains the class definitions and functions and a .cpp file which contains the implementation of the class. The main file which contains most of the functionality is the game.cpp, this is where all the OpenGL configuration is handled, and the classes are implemented. The main file creates a Game object which initiates the game engine and then calls the render() method to display the results.
 
 As a lot of the classes in the application include the same header files, I decided to create a utils.h which contains the include for generic header files such as GLFW, GLUT, GLM as well as the common files such as iostream and string. This meant that I could then include this one file rather than each separate file each time. 
 
